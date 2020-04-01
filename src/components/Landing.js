@@ -8,6 +8,7 @@ import '../stylesheets/Landing.css';
 export default function Landing(){
     return(
         <div className="Landing">
+            
             <header>
                 <div className="header-content">
                     <h1><strong>Agricultural Resources At Your Fingertips</strong></h1>

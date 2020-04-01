@@ -1,6 +1,15 @@
 form{
     margin:1em;
     padding:1em;
-    width:60%;
-    background-color: rgb(241, 241, 241);
+}
+div.container{
+    text-align:center;
+}
+
+div.col-sm-6, div.form-group{
+    text-align:left;
+}
+p.supply-description{
+    text-align: center;
+    font-style: italic;
 }

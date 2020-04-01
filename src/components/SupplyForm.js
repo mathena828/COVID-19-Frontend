@@ -21,7 +21,7 @@ const SupplyForm= ({ setForm, formData, navigation })=>{
             <Card key={supply.name}>
                 
                 <Card.Body>
-                    <Card.Title>{supply.name} 
+                    <Card.Title>Item Name: {supply.name} 
                     <div style={{textAlign:"right"}}>
                         <Button variant = "outline-danger">
                         <svg class="bi bi-trash" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -31,9 +31,10 @@ const SupplyForm= ({ setForm, formData, navigation })=>{
                         </Button>
                     </div>
                     </Card.Title>
-                    <Card.Subtitle>{supply.address}</Card.Subtitle>
+                    <Card.Subtitle>Address: {supply.address}</Card.Subtitle>
                     <hr/>
-                    <p>{supply.description}</p>
+                    <p>Description</p>
+                    <p className="supply-description">{supply.description}</p>
                     <Card.Subtitle>{supply.amount} for Php{totalPrice}</Card.Subtitle>
                 </Card.Body>
             </Card>
@@ -111,15 +112,13 @@ const SupplyForm= ({ setForm, formData, navigation })=>{
                     onChange={e=>setFormDescription(e.target.value)}
                     as="textarea" rows="3" />
                 </Form.Group>
-                <Form.Group>
                     <Button type="submit" variant="primary">Add Item</Button>
-                </Form.Group>
             </Form>
         
         {supplyList}
         <div className="container">
             <div className="row">
-                <div className="col-md">
+                <div className="col-md" style ={{textAlign:"left"}}>
                     <Button onClick={previous} variant="info">
                     <svg class="bi bi-arrow-left" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" d="M5.854 4.646a.5.5 0 010 .708L3.207 8l2.647 2.646a.5.5 0 01-.708.708l-3-3a.5.5 0 010-.708l3-3a.5.5 0 01.708 0z" clip-rule="evenodd"/>
