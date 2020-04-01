@@ -3,10 +3,20 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import '../stylesheets/formStyle.css'
 
+import Jumbotron from 'react-bootstrap/Jumbotron';
+
 const OrgForm = ({ setForm, formData, navigation })=>{
     const {next} = navigation;
     return(
+        <div>
+        <div>
+                <Jumbotron>
+                   <h3>Hi, thank you for registering your produce to the site, it's going to help a lot of people. 
+                       Just answer this form and we'll be good to go!</h3> 
+                   </Jumbotron>
+        </div>
         <div className="container">
+            
             <Form >
                 <h3>Organization Information</h3>
                 <Form.Group>
@@ -46,6 +56,7 @@ const OrgForm = ({ setForm, formData, navigation })=>{
                 </div>
             </div>
 
+        </div>
         </div>
     );
 }

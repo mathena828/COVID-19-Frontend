@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import {useForm, useStep} from 'react-hooks-helper';
-
+import Jumbotron from 'react-bootstrap/Jumbotron';
 import OrgForm from './OrgForm.js';
 import SupplyForm from './SupplyForm.js';
+
 const steps = [
     { id: "organization" },
     { id: "supplies" },
-    { id: "review" },
     { id: "submit" }
   ];
 const defaultData={
@@ -27,10 +27,15 @@ export default function AddSupply(){
             return <OrgForm {...props}/>;
         case "supplies":
             return <SupplyForm {...props}/>
-        case "review":
-            return (<h1>REVIEW1</h1>);
         case "submit":
-            return (<h1> SUBMIT </h1>);
+            return(
+                <div>
+                    <Jumbotron>
+                        <h1>Thank you for your donation!</h1>
+                        <p>Thanks for helping out our LGUs. Please keep your email and phone at the ready if an LGU would like to purchase your supplies.</p>
+                    </Jumbotron>
+                </div>
+            );
         default:
             return null;
     }

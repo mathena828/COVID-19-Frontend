@@ -1,0 +1,22 @@
+.Landing header{
+    height:100vh;
+    position: relative;
+    background: url('../assets/veggies-bg.jpg') no-repeat center fixed;
+    background-size:cover;
+}
+.header-content{
+    color:white;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    font-family: 'Open Sans', sans-serif;
+}
+.header-content h1{
+    font-size:3em;
+}
+.header-content button{
+    margin-top: 1em;
+}
