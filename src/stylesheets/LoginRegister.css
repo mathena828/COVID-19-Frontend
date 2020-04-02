@@ -1,11 +1,11 @@
-div.container{
+.LoginRegister div.container{
     height:100vh;
     position:relative;
     margin: 1.5em auto;
     
 
 }
-div.container .row{
+.LoginRegister div.container .row{
     width:100%;
     position:absolute;
     top: 50%;
