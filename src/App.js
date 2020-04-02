@@ -14,6 +14,7 @@ import {
 
 function App() {
   return (
+    <div>
     <Router>
       <div className="App">
         <Switch>
@@ -29,6 +30,7 @@ function App() {
         </Switch>
       </div>
     </Router>
+    </div>
   );
 }
 

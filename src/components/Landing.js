@@ -1,27 +1,73 @@
 import React from 'react';
-import Jumbotron from 'react-bootstrap/Jumbotron';
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
+import Navbar from 'react-bootstrap/Navbar';
 
 import { Link } from 'react-router-dom';
+
 
 import '../stylesheets/Landing.css';
 export default function Landing(){
     return(
         <div className="Landing">
-            
+
             <header>
+            <Navbar>
+            <Form inline>
+            <InputGroup>
+            <Form.Control
+                placeholder="Username"
+                aria-label="Username"
+                aria-describedby="basic-addon1"
+            />
+            </InputGroup>
+            <InputGroup>
+            <Form.Control
+                placeholder="Password"
+                aria-label="password"
+                aria-describedby="basic-addon1"
+            />
+            </InputGroup>
+            <Button variant="outline-primary">Sign In</Button>
+            </Form>
+            </Navbar>
+            
+        
+            
                 <div className="header-content">
                     <h1><strong>Agricultural Resources At Your Fingertips</strong></h1>
                     <h4>Let's #ENDCOV</h4>
-                    <p>I am a...</p>
-                    
-                    <Link to="/login"><Button>LGU Representative</Button> </Link>
-                    
-                    <Link to="/add-supply"><Button>Supplier</Button></Link>
+                    <Link to="/login"><Button>Register as an LGU</Button> </Link>
+                    <strong>or</strong> 
+                    <Link to="/add-supply"><Button>Post my available supplies</Button></Link>
                 </div>
             </header>
             <main> 
-                <h3>Who are we?</h3>
+                <div className="main-content main1 container">
+                    <h3>What is <strong>Agri</strong>?</h3>
+                    <p>Agri is a free-to-use site to help with the delivery of supplies our Local Government Units (LGU) 
+                        so they can sort through all the resources and divde them fairly to their respective 
+                        communities.</p>
+                </div>
+                <div className="main-content main2 container">
+                    <h3>LGU Representatives vs Suppliers</h3>
+                    <div className="row">
+                        <div className="col-sm">
+                        LGU representatives are the ones in charge of getting supplies from drop points dictated by
+                        Suppliers. They have an access to a database 
+                        of goods that can be delivered, and bringing them to their respective 
+                        communities.
+                        </div>
+                        <div className="col-sm">
+                        Suppliers are the ones who will deliver goods to the LGUs, making sure that 
+                        every good they deliver makes to the drop point safely. 
+                        If any supplier wants to contribute, they will be connected with the LGU representatives via 
+                        their email or phone number.
+                        </div>
+
+                    </div>
+                </div>
             </main>
         </div>
     );
