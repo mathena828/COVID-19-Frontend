@@ -15,7 +15,9 @@ export default function Landing(){
                     <h4>Let's #ENDCOV</h4>
                     <p>I am a...</p>
                     
-                    <Button>LGU Representative</Button> <Link to="/add-supply"><Button>Supplier</Button></Link>
+                    <Link to="/login"><Button>LGU Representative</Button> </Link>
+                    
+                    <Link to="/add-supply"><Button>Supplier</Button></Link>
                 </div>
             </header>
             <main> 

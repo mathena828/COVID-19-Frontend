@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import AddSupply from './components/AddSupply.js';
 import Landing from './components/Landing.js';
+import LoginRegister from './components/LoginRegister.js';
 import {
   BrowserRouter as Router,
   Switch,
@@ -20,7 +21,10 @@ function App() {
             <Landing/>
           </Route>
           <Route path="/add-supply">
-          <AddSupply/>
+            <AddSupply/>
+          </Route>
+          <Route path="/login">
+            <LoginRegister/>
           </Route>
         </Switch>
       </div>
