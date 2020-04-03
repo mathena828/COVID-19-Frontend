@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import { Link } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
@@ -8,16 +9,17 @@ import Modal from 'react-bootstrap/Modal';
 import '../stylesheets/formStyle.css';
 
 var indexCount=0;
-const SupplyForm= ({ setForm, formData, navigation })=>{
-    const {previous, next} = navigation;
+const SupplyForm= ({ supplies, setSupplies, navigation })=>{
+    const [formRegion, setRegion] = useState('');
     const [unit, setUnit] = useState('');
     const [formName, setFormName] = useState('');
     const [formAddress, setFormAddress] = useState('');
     const [formAmount, setFormAmount] = useState(1);
     const [formPrice, setFormPrice] = useState(0.00);
     const [formDescription, setFormDescription] = useState('');
-    const [supplies, setSupplies] = useState([]);
 
+    const {previous, next} = navigation;
+    
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
@@ -73,16 +75,13 @@ const SupplyForm= ({ setForm, formData, navigation })=>{
         <div className="SupplyForm">
         <div>
                 <Jumbotron>
-                   <h3>Hi, thank you for registering your produce to the site, it's going to help a lot of people. 
+                <Link to="/"><Button variant="outline-secondary">Back to Home</Button></Link>
+                   <h3>Hi, thank you for registering your produce to the site.
                        Just answer this form and we'll be good to go!</h3> 
                 </Jumbotron>
         </div>
         <div className="container">
-            <Form onSubmit={(e)=>{
-                e.preventDefault(); 
-                saveSupply(formName, formAddress, formAmount, formPrice, formDescription);
-                e.target.reset();
-            }}>
+            <Form>
                 <h3>Supply Information</h3>
                 <Form.Group className="container row">
                     <Form.Control 
@@ -93,10 +92,39 @@ const SupplyForm= ({ setForm, formData, navigation })=>{
                     placeholder="Item Name" />
                 </Form.Group>
                 <Form.Group>
-                    <Form.Control 
-                    value={formAddress}
-                    onChange={e=>setFormAddress(e.target.value)}
-                    type="text" placeholder="Address" />
+                    <div className="container">
+                        <div className="row">
+                            <Form.Control 
+                            value={formAddress}
+                            onChange={e=>setFormAddress(e.target.value)}
+                            type="text" placeholder="Address" 
+                            className="col-sm-7"/>
+                            <Form.Control 
+                            value={formRegion}
+                            as="select"
+                            onChange={e=>setRegion(e.target.value)}
+                            className="col-sm">
+                                <option>NCR - National Capital Region</option>
+                                <option>Region I - Ilocos Region</option>
+                                <option>Region II - Cagayan Valley</option>
+                                <option>CAR - Cordillera Administrative Region</option>
+                                <option>Region III - Central Luzon</option>
+                                <option>Region IV-A - Calabarzon</option>
+                                <option>Mimaropa - Southwestern Tagalog Region</option>
+                                <option>Region V - Bicol Region</option>
+                                <option>Region VI - Western Visayas</option>
+                                <option>Region VII - Central Visayas</option>
+                                <option>Region VIII - Eastern Visayas</option>
+                                <option>Region IX - Zamboanga Peninsula</option>
+                                <option>Region X - Northern Mindanao</option>
+                                <option>Region XI - Davao Region</option>
+                                <option>Region XII - Soccskargen</option>
+                                <option>Region XIII - Caraga Region</option>
+                                <option>BARMM - Bangsamoro Autonomous Region in Muslim Mindanao</option>
+                            </Form.Control>
+                        </div>
+                    </div>
+                   
                     <Form.Text className="text-muted">
                         Where will this item be available for pickup.
                     </Form.Text>
@@ -106,11 +134,11 @@ const SupplyForm= ({ setForm, formData, navigation })=>{
                     <Form.Label>Amount and Price</Form.Label>
                     <div className="container">
                         <div className="row">
-                            <div className="col-sm-6 row">
+                            <div className="col-sm-6">
                                 <Form.Control 
                                 value={formAmount}
                                 onChange={e=>setFormAmount(e.target.value)}
-                                className="col-sm-6" type="number" placeholder="Amount" /> 
+                                className="col-sm-4" type="number" placeholder="Amount" /> 
                                 <Form.Control className="col-sm-4" as="select" value={unit} onChange={e=>setUnit(e.target.value)}>
                                     <option>g</option>
                                     <option>kg</option>
@@ -120,6 +148,7 @@ const SupplyForm= ({ setForm, formData, navigation })=>{
                                 </Form.Control>
                             </div>
                             <div className="col-sm-6">
+
                                 <Form.Control type="number" placeholder="Price in Php" /> 
                                 <Form.Text 
                                 value={formPrice}
@@ -134,6 +163,7 @@ const SupplyForm= ({ setForm, formData, navigation })=>{
                 <Form.Group>
                     <Form.Label>Description</Form.Label>
                     <Form.Control 
+                    placeholder="Place your description here"
                     value={formDescription}
                     onChange={e=>setFormDescription(e.target.value)}
                     as="textarea" rows="3" />

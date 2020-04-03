@@ -1,17 +1,20 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import '../stylesheets/formStyle.css'
+import '../stylesheets/formStyle.css';
+import { Link } from 'react-router-dom';
 
 import Jumbotron from 'react-bootstrap/Jumbotron';
 
-const OrgForm = ({ setForm, formData, navigation })=>{
+const OrgForm = ({ orgName, setOrgName, firstName, setFirstName, lastName, setLastName, email, setEmail, phone, setPhone,navigation })=>{
     const {next} = navigation;
+
     return(
         <div className ="OrgForm">
         <div>
                 <Jumbotron>
-                   <h3>Hi, thank you for registering your produce to the site, it's going to help a lot of people. 
+                    <Link to="/"><Button variant="outline-secondary">Back to Home</Button></Link>
+                   <h3>Hi, thank you for registering your produce to the site. 
                        Just answer this form and we'll be good to go!</h3> 
                 </Jumbotron>
         </div>
@@ -22,7 +25,11 @@ const OrgForm = ({ setForm, formData, navigation })=>{
                 <Form.Label>Organization</Form.Label>
                 <Form.Group>
                     
-                    <Form.Control type="text" placeholder="Organization Name" />
+                    <Form.Control 
+                    value={orgName}
+                    className="col-sm-6"
+                    onChange={e=>setOrgName(e.target.value)}
+                    type="text" placeholder="Organization Name" />
                     <Form.Text className="text-muted">
                         Answer "Independent" if under no organization.
                     </Form.Text>
@@ -31,8 +38,14 @@ const OrgForm = ({ setForm, formData, navigation })=>{
                 <Form.Group className="container">
 
                     <div className="row">
-                        <Form.Control className="col-sm" type="text" placeholder="First Name" />
-                        <Form.Control className="col-sm" type="text" placeholder="Last Name" />
+                        <Form.Control 
+                        value={firstName}
+                        onChange={e=>setFirstName(e.target.value)}
+                        className="col-sm-4" type="text" placeholder="First Name" />
+                        <Form.Control 
+                        value={lastName}
+                        onChange={e=>setLastName(e.target.value)}
+                        className="col-sm-4" type="text" placeholder="Last Name" />
                     </div>
                 </Form.Group>
                 <Form.Label>Contact Information</Form.Label>
@@ -40,8 +53,14 @@ const OrgForm = ({ setForm, formData, navigation })=>{
                     
                     <div className="row">
                     
-                    <Form.Control className="col-sm-4" type="number" placeholder="Phone Number" />
-                    <Form.Control className="col-sm-4"type="email" placeholder="Email" />
+                    <Form.Control 
+                    value={phone}
+                    onChange={e=>setPhone(e.target.value)}
+                    className="col-sm-4" type="text" placeholder="Phone Number" />
+                    <Form.Control 
+                    value={email}
+                    onChange={e=>setEmail(e.target.value)}
+                    className="col-sm-4"type="email" placeholder="Email" />
                     </div>  
                 </Form.Group>
                 

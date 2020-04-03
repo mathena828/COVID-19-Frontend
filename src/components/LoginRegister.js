@@ -36,7 +36,8 @@ export default function LoginRegister(){
                                 <Form.Control />
                             </Form.Group>
                             <Form.Group>
-                                <Form.Control className="col-sm-4" type="number" placeholder="Phone Number" />
+                                <Form.Label>Contact Number</Form.Label>
+                                <Form.Control className="col-sm-4" type="number" />
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label>Password</Form.Label>
