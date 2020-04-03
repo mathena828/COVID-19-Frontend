@@ -30,7 +30,7 @@ export default function AddSupply(){
     
     const [supplies, setSupplies] = useState([]);
     
-    const props2={supplies, setSupplies, navigation};
+    const props2={orgName, firstName,lastName, email,phone, supplies, setSupplies, navigation, handleSubmit};
     
     
     const { id } = step;
