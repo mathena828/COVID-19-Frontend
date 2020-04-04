@@ -3,7 +3,6 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "../stylesheets/formStyle.css";
 import { Link } from "react-router-dom";
-import axios from "axios";
 
 import Jumbotron from "react-bootstrap/Jumbotron";
 
@@ -92,7 +91,7 @@ const OrgForm = ({
         </Form>
         <div className="container">
           <div className="row">
-            <Button onSave={this.handleSubmit} onClick={next} variant="info">
+            <Button onClick={next} variant="info">
               Next
               <svg
                 className="bi bi-arrow-right"

@@ -17,7 +17,7 @@ function handleSubmit(orgName, firstName, lastName, email, phone, supplies) {
     email: email,
     mobile: phone
   };
-  axios.post("http://localhost:8000/api/supplier/", supplier);
+  axios.post("/api/supplier/", supplier);
   for (var i = 0; i < supplies.length; i++) {
     const supply = {
       supplier: orgName,
@@ -29,7 +29,7 @@ function handleSubmit(orgName, firstName, lastName, email, phone, supplies) {
       price: supplies[i].price,
       description: supplies[i].description
     };
-    axios.post("http://localhost:8000/api/supply/", supply);
+    axios.post("/api/supply/", supply);
   }
 }
 export default function AddSupply() {
