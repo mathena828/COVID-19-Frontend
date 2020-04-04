@@ -13,11 +13,6 @@ const steps = [
   ];
 
 function handleSubmit(orgName, firstName,lastName,email, phone, supplies){
-    console.log("test");
-    if (orgName==='' || firstName==='' || lastName==='' || phone===''){
-        alert("Please ensure that you have filled out all fields in the form.");
-        return false;
-    }
     
     var name = firstName + " " + lastName;
     let body = {organization:orgName,
