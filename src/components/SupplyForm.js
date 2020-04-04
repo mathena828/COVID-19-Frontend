@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Jumbotron from 'react-bootstrap/Jumbotron';
-import Modal from 'react-bootstrap/Modal';
+//import Modal from 'react-bootstrap/Modal';
 
 import '../stylesheets/formStyle.css';
 
@@ -18,12 +18,12 @@ const SupplyForm= ({ orgName, firstName,lastName, email,phone,supplies, setSuppl
     const [formPrice, setFormPrice] = useState(0.00);
     const [formDescription, setFormDescription] = useState('');
 
-    const {previous, next} = navigation;
+    const {previous} = navigation;
     
-    const [show, setShow] = useState(false);
+    //const [show, setShow] = useState(false);
 
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    //const handleClose = () => setShow(false);
+    //const handleShow = () => setShow(true);
 
     var supplyList=supplies.map((supply)=>{
         var totalPrice = supply.price * supply.amount;
@@ -65,7 +65,7 @@ const SupplyForm= ({ orgName, firstName,lastName, email,phone,supplies, setSuppl
     }
 
     function deleteSupply(supplyIndex){
-        const newSupplies = supplies.filter((_,index)=> index!=supplyIndex);
+        const newSupplies = supplies.filter((_,index)=> index!==supplyIndex);
 
         setSupplies(newSupplies);
     }
@@ -188,7 +188,7 @@ const SupplyForm= ({ orgName, firstName,lastName, email,phone,supplies, setSuppl
         </div>
         </div>
 
-        <Modal show={show} onHide={handleClose}>
+        {/* <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Submit Form</Modal.Title>
         </Modal.Header>
@@ -201,7 +201,7 @@ const SupplyForm= ({ orgName, firstName,lastName, email,phone,supplies, setSuppl
             Save and Submit
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
 
         </div>
     );

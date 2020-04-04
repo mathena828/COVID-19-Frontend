@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {useForm, useStep} from 'react-hooks-helper';
+import {useStep} from 'react-hooks-helper';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import OrgForm from './OrgForm.js';
 import SupplyForm from './SupplyForm.js';
@@ -14,14 +14,37 @@ const steps = [
 
 function handleSubmit(orgName, firstName,lastName,email, phone, supplies){
     console.log("test");
+    if (orgName==='' || firstName==='' || lastName==='' || phone===''){
+        alert("Please ensure that you have filled out all fields in the form.");
+        return false;
+    }
+    
+    var name = firstName + " " + lastName;
+    let body = {organization:orgName,
+                name: name, 
+                mobile:phone,
+                email: email};
+    fetch("http://localhost:8000/api/supplier/", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(body)
+    }).then((response)=>{
+        return response.json();
+    }).then((data) => {
+        console.log(data);
+    });
 }
 export default function AddSupply(){
     const {step, navigation} = useStep({ initialStep: 0, steps });
-    /* const [formData, setForm] = useForm(defaultData); */
+    /* const [formData, setForm] = (defaultData); */
    /*  const props2 = { formData, setForm, navigation }; */
-    const [orgName, setOrgName] = useState('');
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
+    
+    const [orgName, setOrgName] = useState('Independent');
+    const [firstName, setFirstName] = useState('Juan');
+    const [lastName, setLastName] = useState('Dela Cruz');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState(''); 
     const props = {orgName, setOrgName, firstName, setFirstName, 
