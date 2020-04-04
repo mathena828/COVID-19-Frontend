@@ -118,6 +118,7 @@ const SupplyForm = ({
         <Form
           onSubmit={e => {
             handleSubmit(orgName, firstName, lastName, email, phone, supplies);
+            e.preventDefault();
           }}
         >
           <h3>Supply Information</h3>

@@ -9,7 +9,8 @@ import axios from "axios";
 
 const steps = [{ id: "organization" }, { id: "supplies" }, { id: "submit" }];
 
-function handleSubmit(orgName, firstName, lastName, email, phone, supplies) {
+async function handleSubmit(orgName, firstName, lastName, email, phone, supplies) {
+  
   const supplier = {
     organization: orgName,
     first_name: firstName,
@@ -18,33 +19,28 @@ function handleSubmit(orgName, firstName, lastName, email, phone, supplies) {
     mobile: phone
   };
   
-  axios.post("http://localhost:8000/api/supplier/", supplier).then(res=>{
-  console.log(res.data);
+  await axios.post("http://localhost:8000/api/supplier/", supplier).then(res=>{
   var resID = res.data.id;
-  for (var supply in supplies) {
+  for (var i =0; i<supplies.length; i++ ){
+    var supply = supplies[i];
+    console.log(supply.name);
+    var num = supply['price'].toFixed(2);
     const supplyRequest = {
       supplier:resID,
-      name:"no matter",
-      address:"noooooooooo",
-      region:"NCR",
-      quantity:1,
-      unit:"unit",
-      price:"0.00",
-      description:"lorem"
-      /* supplier: 1,
-      name: supply.name,
-      address: supply.address,
-      region: supply.region,
-      quantity: supply.amount,
-      unit: supply.unit,
-      price: supply.price,
-      description: supply.description, */
+      name: supply['name'],
+      address: supply['address'],
+      region: "NCR",
+      quantity: 1,
+      unit: "unit",
+      price: num,
+      description: supply['description']
     };
     console.log(JSON.stringify(supplyRequest));
-    axios.post("http://localhost:8000/api/supply/", supplyRequest);
+    axios.post("http://localhost:8000/api/supply/", supplyRequest).catch(error=>{console.log(error.message)});
   }
-  return res.data});
-  
+  return console.log(res.data)}).catch(error => {
+    console.log(error.message);
+  });
 }
 export default function AddSupply() {
   const { step, navigation } = useStep({ initialStep: 0, steps });
