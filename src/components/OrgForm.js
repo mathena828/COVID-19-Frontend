@@ -92,7 +92,7 @@ const OrgForm = ({
         </Form>
         <div className="container">
           <div className="row">
-            <Button onSave={this.handleSubmit} onClick={next} variant="info">
+            <Button onClick={next} variant="info">
               Next
               <svg
                 className="bi bi-arrow-right"

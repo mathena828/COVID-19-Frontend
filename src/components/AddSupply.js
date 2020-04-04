@@ -9,14 +9,14 @@ import axios from "axios";
 
 const steps = [{ id: "organization" }, { id: "supplies" }, { id: "submit" }];
 
-function handleSubmit(orgName, firstName, lastName, email, phone, supplies) {
-  const supplier = {
-    organization: orgName,
-    first_name: firstName,
-    last_name: lastName,
-    email: email,
-    mobile: phone
-  };
+function handleSubmit(orgName, firstName, lastName, email, phone, supplies){
+    const supplier = {
+        organization: orgName,
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        mobile: phone
+    };
   axios.post("http://localhost:8000/api/supplier/", supplier);
   for (var i = 0; i < supplies.length; i++) {
     const supply = {
