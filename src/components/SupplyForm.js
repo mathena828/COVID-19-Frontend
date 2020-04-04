@@ -21,12 +21,12 @@ const SupplyForm = ({
   navigation,
   handleSubmit
 }) => {
-  const [formRegion, setRegion] = useState("");
-  const [unit, setUnit] = useState("");
+  const [formRegion, setRegion] = useState("National Capital Region");
+  const [unit, setUnit] = useState("gram");
   const [formName, setFormName] = useState("");
   const [formAddress, setFormAddress] = useState("");
   const [formAmount, setFormAmount] = useState(1);
-  const [formPrice, setFormPrice] = useState(0.0);
+  const [formPrice, setFormPrice] = useState(0);
   const [formDescription, setFormDescription] = useState("");
 
   const { previous } = navigation;
@@ -66,22 +66,25 @@ const SupplyForm = ({
               </Button>
             </div>
           </Card.Title>
-          <Card.Subtitle>Address: {supply.address}</Card.Subtitle>
+          <Card.Subtitle>Address: {supply.address}, {supply.region}</Card.Subtitle>
           <hr />
           <p>Description</p>
           <p className="supply-description">{supply.description}</p>
           <Card.Subtitle>
-            {supply.amount} for Php{totalPrice}
+            {supply.amount} {supply.unit} for Php{totalPrice}
           </Card.Subtitle>
         </Card.Body>
       </Card>
     );
   });
-  function saveSupply(name, address, region, amount, price, description) {
+  //fields = ('id','supplier','name','address','region','quantity','unit','price','description','is_validated')
+  
+  function saveSupply(name, address, region, unit, amount, price, description) {
     var newSupply = {
       name: name,
       address: address,
       amount: amount,
+      unit:unit,
       region: region,
       price: price,
       description: description,
@@ -89,6 +92,7 @@ const SupplyForm = ({
     };
     indexCount += 1;
     setSupplies([...supplies, newSupply]);
+    
   }
 
   function deleteSupply(supplyIndex) {
@@ -140,28 +144,26 @@ const SupplyForm = ({
                   value={formRegion}
                   as="select"
                   onChange={e => setRegion(e.target.value)}
-                  className="col-sm"
-                >
-                  <option>NCR - National Capital Region</option>
-                  <option>Region I - Ilocos Region</option>
-                  <option>Region II - Cagayan Valley</option>
-                  <option>CAR - Cordillera Administrative Region</option>
-                  <option>Region III - Central Luzon</option>
-                  <option>Region IV-A - Calabarzon</option>
-                  <option>Mimaropa - Southwestern Tagalog Region</option>
-                  <option>Region V - Bicol Region</option>
-                  <option>Region VI - Western Visayas</option>
-                  <option>Region VII - Central Visayas</option>
-                  <option>Region VIII - Eastern Visayas</option>
-                  <option>Region IX - Zamboanga Peninsula</option>
-                  <option>Region X - Northern Mindanao</option>
-                  <option>Region XI - Davao Region</option>
-                  <option>Region XII - Soccskargen</option>
-                  <option>Region XIII - Caraga Region</option>
-                  <option>
-                    BARMM - Bangsamoro Autonomous Region in Muslim Mindanao
-                  </option>
+                  className="col-sm">
+                  <option>NCR</option>
+                  <option>Region I</option>
+                  <option>Region II</option>
+                  <option>CAR</option>
+                  <option>Region III</option>
+                  <option>Region IV-A</option>
+                  <option>Mimaropa</option>
+                  <option>Region V</option>
+                  <option>Region VI</option>
+                  <option>Region VII</option>
+                  <option>Region VIII</option>
+                  <option>Region IX</option>
+                  <option>Region X</option>
+                  <option>Region XI</option>
+                  <option>Region XII</option>
+                  <option>Region XIII</option>
+                  <option>BARMM</option>
                 </Form.Control>
+
               </div>
             </div>
 
@@ -190,17 +192,19 @@ const SupplyForm = ({
                   >
                     <option>g</option>
                     <option>kg</option>
-                    <option>mL</option>
+                    <option>ml</option>
                     <option>liter</option>
-                    <option>meter</option>
-                    <option>item</option>
+                    <option>m</option>
+                    <option>unit</option>
                   </Form.Control>
                 </div>
                 <div className="col-sm-6">
-                  <Form.Control type="number" placeholder="Price in Php" />
+                  <Form.Control 
+                  value={formPrice}
+                  onChange={e => {setFormPrice(e.target.value)}}
+                  type="number" placeholder="Price in Php" />
                   <Form.Text
-                    value={formPrice}
-                    onChange={e => setFormPrice(e.target.value)}
+                    
                     className="text-muted"
                   >
                     Answer price per unit.
@@ -219,12 +223,14 @@ const SupplyForm = ({
               rows="3"
             />
           </Form.Group>
+          
           <Button
             onClick={e =>
               saveSupply(
                 formName,
                 formAddress,
                 formRegion,
+                unit,
                 formAmount,
                 formPrice,
                 formDescription

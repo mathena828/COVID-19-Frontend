@@ -17,31 +17,43 @@ function handleSubmit(orgName, firstName, lastName, email, phone, supplies) {
     email: email,
     mobile: phone
   };
-  axios.post("/api/supplier/", supplier);
-
-  for (var i = 0; i < supplies.length; i++) {
-    const supply = {
-      supplier: orgName,
-      name: supplies[i].index,
-      region: supplies[i].region,
-      address: supplies[i].address,
-      quantity: supplies[i].quantity,
-      unit: supplies[i].unit,
-      price: supplies[i].price,
-      description: supplies[i].description
+  
+  axios.post("http://localhost:8000/api/supplier/", supplier).then(res=>{
+  console.log(res.data);
+  var resID = res.data.id;
+  for (var supply in supplies) {
+    const supplyRequest = {
+      supplier:resID,
+      name:"no matter",
+      address:"noooooooooo",
+      region:"NCR",
+      quantity:1,
+      unit:"unit",
+      price:"0.00",
+      description:"lorem"
+      /* supplier: 1,
+      name: supply.name,
+      address: supply.address,
+      region: supply.region,
+      quantity: supply.amount,
+      unit: supply.unit,
+      price: supply.price,
+      description: supply.description, */
     };
-    axios.post("/api/supply/", supply);
+    console.log(JSON.stringify(supplyRequest));
+    axios.post("http://localhost:8000/api/supply/", supplyRequest);
   }
+  return res.data});
+  
 }
 export default function AddSupply() {
   const { step, navigation } = useStep({ initialStep: 0, steps });
-  /* const [formData, setForm] = useForm(defaultData); */
-  /*  const props2 = { formData, setForm, navigation }; */
   const [orgName, setOrgName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [supplies, setSupplies] = useState([]);
   const props = {
     orgName,
     setOrgName,
@@ -56,7 +68,7 @@ export default function AddSupply() {
     navigation
   };
 
-  const [supplies, setSupplies] = useState([]);
+
 
   const props2 = {
     orgName,
