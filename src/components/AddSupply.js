@@ -18,6 +18,7 @@ function handleSubmit(orgName, firstName, lastName, email, phone, supplies) {
     mobile: phone
   };
   axios.post("/api/supplier/", supplier);
+
   for (var i = 0; i < supplies.length; i++) {
     const supply = {
       supplier: orgName,
