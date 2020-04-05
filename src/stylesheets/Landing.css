@@ -1,0 +1,44 @@
+.Landing header{
+    height:100vh;
+    position: relative;
+    background: url('../assets/veggies-bg.jpg') no-repeat center fixed;
+    background-size:cover;
+}
+.header-content{
+    color:white;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    font-family: 'Open Sans', sans-serif;
+    
+
+}
+.header-content h1{
+    margin-top:-80px;
+    font-size:3em;
+}
+.header-content button{
+    margin: 1em 2em;
+}
+.main1{
+    padding:1em;
+}
+
+div.main-content.main2.container .col-sm{
+    background-color: rgb(230, 230, 230);
+    padding:1em;margin:1em
+}
+
+form.form-inline{
+    position: relative;
+    margin-top:0;
+    float: right;
+}
+
+form.form-inline .input-group{
+    margin:1em;
+    
+}
