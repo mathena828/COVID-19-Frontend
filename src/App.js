@@ -6,6 +6,7 @@ import './App.css';
 import AddSupply from './components/AddSupply.js';
 import Landing from './components/Landing.js';
 import LoginRegister from './components/LoginRegister.js';
+import SupplyList from './components/SupplyList.js';
 import {
   HashRouter as Router,
   Switch,
@@ -25,8 +26,11 @@ class App extends Component {
       <div className="App">
         <Switch>
           
-          <PrivateRoute exact path="/">
+          <Route exact path="/">
             <Landing/>
+          </Route>
+          <PrivateRoute path="/supply-list">
+            <SupplyList/>
           </PrivateRoute>
           <Route path="/add-supply">
             <AddSupply/>

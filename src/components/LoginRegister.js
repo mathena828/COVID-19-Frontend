@@ -40,7 +40,7 @@ function LoginRegister({login, isAuthenticated}){
     const [logPassword, setLogPassword] = useState("");
 
     if(isAuthenticated){
-        return <Redirect to="/add-supply"/>;
+        return <Redirect to="/supply-list"/>;
     }
     return(
         <div className="LoginRegister">
