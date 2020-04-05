@@ -1,18 +1,7 @@
-.LoginRegister div.container{
-    height:100vh;
-    position:relative;
-    margin: 1.5em auto;
-    
-
+.Login form{
+    padding:1em;
 }
 
-.left{
+.Login, .Register{
     padding: 1em;
-    color: #486f65;
-   
-}
-.right{
-    color:white;
-    padding: 1em;
-    background-color: #486f65;
 }

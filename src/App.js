@@ -1,12 +1,14 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import { Provider } from 'react-redux'
 import store from './store.js';
 import PrivateRoute from './components/common/PrivateRoute.js';
 import './App.css';
 import AddSupply from './components/AddSupply.js';
 import Landing from './components/Landing.js';
-import LoginRegister from './components/LoginRegister.js';
 import SupplyList from './components/SupplyList.js';
+import Login from './components/Login.js';
+import Register from './components/Register.js';
+import Navigation from './components/layout/Navigation.js';
 import {
   HashRouter as Router,
   Switch,
@@ -24,6 +26,9 @@ class App extends Component {
     <div>
     <Router>
       <div className="App">
+        <Fragment>
+          <Navigation/>
+
         <Switch>
           
           <Route exact path="/">
@@ -36,9 +41,13 @@ class App extends Component {
             <AddSupply/>
           </Route>
           <Route path="/login">
-            <LoginRegister/>
+            <Login/>
+          </Route>
+          <Route path="/register">
+            <Register/>
           </Route>
         </Switch>
+        </Fragment>
       </div>
     </Router>
     </div>

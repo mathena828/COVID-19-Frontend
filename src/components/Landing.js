@@ -13,32 +13,10 @@ export default function Landing(){
         <div className="Landing">
 
             <header>
-            <Navbar>
-            <Form inline>
-            <InputGroup>
-            <Form.Control
-                placeholder="Username"
-                aria-label="Username"
-                aria-describedby="basic-addon1"
-            />
-            </InputGroup>
-            <InputGroup>
-            <Form.Control
-                placeholder="Password"
-                aria-label="password"
-                aria-describedby="basic-addon1"
-            />
-            </InputGroup>
-            <Button variant="outline-primary">Sign In</Button>
-            </Form>
-            </Navbar>
-            
-        
-            
                 <div className="header-content">
                     <h1><strong>Agricultural Resources At Your Fingertips</strong></h1>
                     <h4>Let's #ENDCOV</h4>
-                    <Link to="/login"><Button>Register as an LGU</Button> </Link>
+                    <Link to="/register"><Button>Register as an LGU</Button> </Link>
                     <strong>or</strong> 
                     <Link to="/add-supply"><Button>Post my available supplies</Button></Link>
                 </div>
