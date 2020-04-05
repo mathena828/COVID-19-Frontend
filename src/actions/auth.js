@@ -14,28 +14,12 @@ import {
 export const loadUser = () => (dispatch, getState) => {
   //User loading
   dispatch({ type: USER_LOADING });
-
-  //Get token from state
-  const token = getState().auth.token;
-
-  //headers
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-
-  //if token, add to headers config
-  if (token) {
-    config.headers["Authorization"] = "Token ${token}";
-  }
-
   axios
-    .get("http://localhost:8000/api/auth/user", config)
-    .then((res) => {
+    .get("http://localhost:8000/api/auth/user", tokenConfig(getState))
+    .then(res => {
       dispatch({
         type: USER_LOADED,
-        payload: res.data,
+        payload: res.data
       });
     })
     .catch((err) => {
@@ -77,25 +61,12 @@ export const login = (username, password) => (dispatch) => {
       });
     });
 };
+//LOGOUT USER
 
 export const logout = () => (dispatch, getState) => {
-  //Get token from state
-  const token = getState().auth.token;
-
-  //headers
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-
-  //if token, add to headers config
-  if (token) {
-    config.headers["Authorization"] = "Token ${token}";
-  }
-
+    console.log("wasCLick");
   axios
-    .post("http://localhost:8000/api/auth/logout/", null, config)
+    .post("http://localhost:8000/api/auth/logout/", null, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: LOGOUT_SUCCESS,
@@ -105,3 +76,24 @@ export const logout = () => (dispatch, getState) => {
       dispatch(returnErrors(err.response.data, err.response.status));
     });
 };
+
+
+// Setup config with token - helper function
+export const tokenConfig = getState => {
+    // Get token from state
+    const token = getState().auth.token;
+  
+    // Headers
+    const config = {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    };
+  
+    // If token, add to headers config
+    if (token) {
+      config.headers["Authorization"] = `Token ${token}`;
+    }
+  
+    return config;
+  };

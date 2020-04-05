@@ -2,13 +2,15 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import { connect } from 'react-redux';
+
+import { logout } from '../../actions/auth';
 import PropTypes from "prop-types";
-function Navigation({auth}){
+function Navigation({auth, logout}){
     const { isAuthenticated, user } = auth;
     const authLinks = (
         <ul className="navbar-nav ml-auto mt-2 mt-lg-0">
             <li className="nav-item">
-                <Button variant="outline-info" className="nav-link text-light">
+                <Button onClick={logout} variant="outline-info" className="nav-link text-light">
                     Logout
                 </Button>
                 {/* <button className="nav-link btn btn-info btn-sm text-light">
@@ -65,4 +67,4 @@ Navigation.propTypes = {
 const mapStateToProps = state =>({
     auth:state.auth
 })
-export default connect(mapStateToProps)(Navigation);
+export default connect(mapStateToProps, {logout})(Navigation);
