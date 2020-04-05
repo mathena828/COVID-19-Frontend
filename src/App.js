@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import { Provider } from 'react-redux'
 import store from './store.js';
 import PrivateRoute from './components/common/PrivateRoute.js';
@@ -11,9 +11,13 @@ import {
   Switch,
   Route,
 } from "react-router-dom";
+import { loadUser } from './actions/auth.js';
 
-
-function App() {
+class App extends Component {
+  componentDidMount(){
+    store.dispatch(loadUser());
+  }
+  render(){
   return (
     <Provider store ={store}>
     <div>
@@ -21,9 +25,9 @@ function App() {
       <div className="App">
         <Switch>
           
-          <Route exact path="/">
+          <PrivateRoute exact path="/">
             <Landing/>
-          </Route>
+          </PrivateRoute>
           <Route path="/add-supply">
             <AddSupply/>
           </Route>
@@ -36,6 +40,7 @@ function App() {
     </div>
     </Provider>
   );
+  }
 }
 
 export default App;
