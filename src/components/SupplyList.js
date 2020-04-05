@@ -16,7 +16,6 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { logout } from "../actions/auth";
 
 const supplies = [
   {
@@ -145,21 +144,12 @@ var supplyList = supplies.map((supply) => {
   );
 });
 
-function SupplyList() {
+function SupplyList({ auth }) {
   return (
     <div className="SupplyList">
       <div>
         <Jumbotron className="text-center">
           <h1>Supply List</h1>
-          <button
-            className="btn-info btn-sm"
-            onClick={(e) => {
-              e.preventDefault();
-              logout();
-            }}
-          >
-            Logout
-          </button>
         </Jumbotron>
       </div>
       <Container>
@@ -183,11 +173,10 @@ function SupplyList() {
 
 SupplyList.propTypes = {
   auth: PropTypes.object.isRequired,
-  logout: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { logout })(SupplyList);
+export default connect(mapStateToProps)(SupplyList);

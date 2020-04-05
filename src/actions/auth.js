@@ -16,10 +16,10 @@ export const loadUser = () => (dispatch, getState) => {
   dispatch({ type: USER_LOADING });
   axios
     .get("http://localhost:8000/api/auth/user", tokenConfig(getState))
-    .then(res => {
+    .then((res) => {
       dispatch({
         type: USER_LOADED,
-        payload: res.data
+        payload: res.data,
       });
     })
     .catch((err) => {
@@ -64,7 +64,7 @@ export const login = (username, password) => (dispatch) => {
 //LOGOUT USER
 
 export const logout = () => (dispatch, getState) => {
-    console.log("wasCLick");
+  console.log("wasCLick");
   axios
     .post("http://localhost:8000/api/auth/logout/", null, tokenConfig(getState))
     .then((res) => {
@@ -77,23 +77,22 @@ export const logout = () => (dispatch, getState) => {
     });
 };
 
-
 // Setup config with token - helper function
-export const tokenConfig = getState => {
-    // Get token from state
-    const token = getState().auth.token;
-  
-    // Headers
-    const config = {
-      headers: {
-        "Content-Type": "application/json"
-      }
-    };
-  
-    // If token, add to headers config
-    if (token) {
-      config.headers["Authorization"] = `Token ${token}`;
-    }
-  
-    return config;
+export const tokenConfig = (getState) => {
+  // Get token from state
+  const token = getState().auth.token;
+
+  // Headers
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
   };
+
+  // If token, add to headers config
+  if (token) {
+    config.headers["Authorization"] = `Token ${token}`;
+  }
+
+  return config;
+};
