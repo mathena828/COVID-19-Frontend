@@ -15,17 +15,26 @@ import Button from "react-bootstrap/Button";
 import "../stylesheets/SupplyList.css";
 import SupplyForm from "./SupplyForm.js";
 import Card from "react-bootstrap/Card";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import PropTypes from "prop-types";
+import axios from "axios";
 
 const supplies = [
   {
     index: 1,
-    supplier: "Test supplier",
+    supplier: {
+      organization: "Test Organization 1",
+      first_name: "Organization",
+      last_name: "One",
+      mobile: "1234567890",
+      email: "test@organization.one",
+      is_verified: true,
+      code: "TSTORG1"
+    },
     name: "Test Card",
     region: "National Capital Region",
     address: "Test address",
@@ -33,11 +42,18 @@ const supplies = [
     unit: "kg",
     price: 1000,
     description: "Test description",
-    is_validated: true
   },
   {
     index: 2,
-    supplier: "Test supplier",
+    supplier: {
+      organization: "Test Organization 1",
+      first_name: "Organization",
+      last_name: "One",
+      mobile: "1234567890",
+      email: "test@organization.one",
+      is_verified: true,
+      code: "TSTORG1"
+    },
     name: "Test Bigas",
     region: "National Capital Region",
     address: "Test address",
@@ -45,11 +61,18 @@ const supplies = [
     unit: "kg",
     price: 3000,
     description: "Test description",
-    is_validated: true
   },
   {
     index: 3,
-    supplier: "Test supplier",
+    supplier: {
+      organization: "Test Organization 2",
+      first_name: "Organization",
+      last_name: "Two",
+      mobile: "1234567890",
+      email: "test@organization.two",
+      is_verified: true,
+      code: "TSTORG2"
+    },
     name: "Test Banana",
     region: "Cordillera Administrative Region",
     address: "Test address",
@@ -57,13 +80,13 @@ const supplies = [
     unit: "kg",
     price: 2000,
     description: "Test description",
-    is_validated: true
   },
 ];
 const columns = [
   {
-    dataField: "index",
+    dataField: "id",
     text: "ID",
+    sort: true,
     searchable: false,
   },
   {
@@ -76,11 +99,6 @@ const columns = [
     sort: true,
     searchable: false,
     filter: textFilter(),
-  },
-  {
-    dataField: "address",
-    text: "Address",
-    searchable: false,
   },
   {
     dataField: "quantity",
@@ -101,17 +119,22 @@ const columns = [
     searchable: false,
     filter: textFilter(),
   },
-  {
-    dataField: "description",
-    searchable: false,
-    text: "Description",
-  },
 ];
 
-const pagination = paginationFactory({
-  totalSize: supplies.length,
-  sizePerPage: 5,
-});
+async function fetchSupplier (id) {
+  let returnData = {};
+  try {
+    const supplier = await axios
+      .get(`http://localhost:8000/api/supplier/${id}`);
+    const { data, status } = supplier;
+    if (status !== 200) throw new Error("Error in getSupply call.");
+    returnData = data;
+  } catch (e) {
+    console.log(e);
+    returnData = false;
+  }
+  return returnData;
+}
 
 let state = false;
 const TableSearch = (props) => {
@@ -148,6 +171,54 @@ const TableSearch = (props) => {
 };
 
 function SupplyList({ auth }) {
+  const [supplies, setSupplies] = useState([]);
+  const [supplier, setSupplier] = useState({});
+
+  const expandRow = {
+    onlyOneExpanding: true,
+    onExpand: async (row, isExpand, rowIndex, e) => {
+      const supplier = await fetchSupplier(row.supplier);
+      setSupplier(supplier);
+    },
+    renderer: row => (
+      <Container>
+        <Row>
+          <Col sm={4}>
+            <p>{`Supply Address: ${row.address}`}</p>
+            <p>{`Supply Description: ${row.description}`}</p>
+          </Col>
+          <Col sm={8}>
+            <p>{`Supplier: ${supplier.first_name} ${supplier.last_name}`}</p>
+            <p>{`Organization: ${supplier.organization}`}</p>
+            <p>Contact Information:</p>
+            <p>{`Mobile Number - ${supplier.mobile}`}</p>
+            <p>{`Email - ${supplier.email}`}</p>
+          </Col>
+        </Row>
+      </Container>
+    ),
+  };
+
+  useEffect(() => {
+    async function fetchSupplies() {
+      let returnData = [];
+      try {
+        const getSupply = await axios.get("http://localhost:8000/api/supply");
+        const { data, status } = getSupply;
+        if (status !== 200) throw new Error("Error in getSupply call.");
+        setSupplies(data);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    fetchSupplies();
+  }, []);
+
+  const pagination = paginationFactory({
+    totalSize: supplies.length,
+    sizePerPage: 5,
+  });
+
   return (
     <div className="SupplyList">
       <div>
@@ -159,7 +230,7 @@ function SupplyList({ auth }) {
         <Card className='main-card'>
           <Card.Body>
             <ToolkitProvider
-              keyField='index'
+                keyField='id'
                 data={ supplies }
                 columns={ columns }
                 search
@@ -170,9 +241,10 @@ function SupplyList({ auth }) {
                         <TableSearch { ...props.searchProps } />
                         <BootstrapTable
                           { ...props.baseProps }
-                          bordered={false}
-                          pagination={pagination}
-                          filter={filterFactory()}
+                          bordered={ false }
+                          pagination={ pagination }
+                          filter={ filterFactory() }
+                          expandRow={ expandRow }
                           bootstrap4
                           filterPosition="bottom"
                         />
