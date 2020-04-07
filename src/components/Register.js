@@ -18,7 +18,8 @@ function Register({register, isAuthenticated}){
         return <Redirect to="/supply-list"/>;
     }
     return(
-        <div className="Register">
+        <div className="Register col-md-6 m-auto">
+            <div className="card card-body mt-5">
             <h4 >Create an account</h4>
             <Form onSubmit = {
                 (e)=>{ 
@@ -70,6 +71,7 @@ function Register({register, isAuthenticated}){
                 <Button type="submit">Register</Button>
             </Form>
             <p> Already have an account? <Link to="/login">Log in</Link></p>
+        </div>
         </div>
     )
 }

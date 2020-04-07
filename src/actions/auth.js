@@ -34,8 +34,6 @@ export const loadUser = () => (dispatch, getState) => {
 
 //LOGIN USER
 export const login = (username, password) => (dispatch) => {
-  console.log("hello me login");
-
   //headers
   const config = {
     headers: {
@@ -66,7 +64,6 @@ export const login = (username, password) => (dispatch) => {
 //LOGOUT USER
 
 export const logout = () => (dispatch, getState) => {
-  console.log("wasCLick");
   axios
     .post("http://localhost:8000/api/auth/logout/", null, tokenConfig(getState))
     .then((res) => {
