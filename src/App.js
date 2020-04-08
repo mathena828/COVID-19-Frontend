@@ -13,6 +13,7 @@ import Login from './components/Login.js';
 import Register from './components/Register.js';
 import Navigation from './components/layout/Navigation.js';
 import Alerts from './components/layout/Alerts.js';
+import Footer from './components/layout/Footer.js';
 import {
   HashRouter as Router,
   Switch,
@@ -57,6 +58,7 @@ class App extends Component {
             <Register/>
           </Route>
         </Switch>
+        <Footer/>
         </Fragment>
       </div>
     </Router>

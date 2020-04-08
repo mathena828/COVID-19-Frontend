@@ -19,9 +19,6 @@ function Navigation({ auth, logout }) {
         >
           Logout
         </Button>
-        {/* <button className="nav-link btn btn-info btn-sm text-light">
-                    Logout
-                </button> */}
       </li>
     </ul>
   );
@@ -41,7 +38,7 @@ function Navigation({ auth, logout }) {
   );
 
   return (
-    <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
+    <nav className="navbar navbar-expand-sm navbar-dark bg-primary">
       <div className="container">
         <button
           className="navbar-toggler"
@@ -56,7 +53,7 @@ function Navigation({ auth, logout }) {
         </button>
         <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
           <a className="navbar-brand" href="#">
-            Agri
+            AgriLink
           </a>
         </div>
         {isAuthenticated ? authLinks : guestLinks}

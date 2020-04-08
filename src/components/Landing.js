@@ -11,32 +11,13 @@ export default function Landing() {
   return (
     <div className="Landing">
       <header>
-        {/* <Navbar>
-            <Form inline>
-            <InputGroup>
-            <Form.Control
-                placeholder="Username"
-                aria-label="Username"
-                aria-describedby="basic-addon1"
-            />
-            </InputGroup>
-            <InputGroup>
-            <Form.Control
-                placeholder="Password"
-                aria-label="password"
-                aria-describedby="basic-addon1"
-            />
-            </InputGroup>
-            <Button variant="outline-primary">Sign In</Button>
-            </Form>
-            </Navbar> */}
 
         <div className="header-content">
           <h1>
             <strong>Agricultural Resources At Your Fingertips</strong>
           </h1>
           <h4>Let's #ENDCOV</h4>
-          <Link to="/login">
+          <Link to="/register">
             <Button>Register as an LGU</Button>{" "}
           </Link>
           <strong>or</strong>
@@ -48,16 +29,17 @@ export default function Landing() {
       <main>
         <div className="main-content main1 container">
           <h3>
-            What is <strong>Agri</strong>?
+            What is <strong>AgriLink</strong>?
           </h3>
           <p>
-            Agri is a free-to-use site to help with the delivery of supplies our
+            AgriLink is a free-to-use site to help with the delivery of supplies our
             Local Government Units (LGU) so they can sort through all the
             resources and divde them fairly to their respective communities.
           </p>
         </div>
         <div className="main-content main2 container">
           <h3>LGU Representatives vs Suppliers</h3>
+          <hr/>
           <div className="row">
             <div className="col-sm">
               LGU representatives are the ones in charge of getting supplies
