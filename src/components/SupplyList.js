@@ -2,10 +2,14 @@ import filterFactory, {
   textFilter,
   numberFilter,
 } from "react-bootstrap-table2-filter";
+import {
+  CaretLeftFill,
+  CaretRightFill,
+} from 'react-bootstrap-icons';
+import ToolkitProvider from 'react-bootstrap-table2-toolkit';
 import 'react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min.css';
 import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
-import paginationFactory from "react-bootstrap-table2-paginator";
-import ToolkitProvider from 'react-bootstrap-table2-toolkit';
+import paginationFactory, { PaginationProvider } from "react-bootstrap-table2-paginator";
 import BootstrapTable from "react-bootstrap-table-next";
 import FormControl from 'react-bootstrap/FormControl';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -23,65 +27,6 @@ import Col from 'react-bootstrap/Col';
 import PropTypes from "prop-types";
 import axios from "axios";
 
-const supplies = [
-  {
-    index: 1,
-    supplier: {
-      organization: "Test Organization 1",
-      first_name: "Organization",
-      last_name: "One",
-      mobile: "1234567890",
-      email: "test@organization.one",
-      is_verified: true,
-      code: "TSTORG1"
-    },
-    name: "Test Card",
-    region: "National Capital Region",
-    address: "Test address",
-    quantity: 5,
-    unit: "kg",
-    price: 1000,
-    description: "Test description",
-  },
-  {
-    index: 2,
-    supplier: {
-      organization: "Test Organization 1",
-      first_name: "Organization",
-      last_name: "One",
-      mobile: "1234567890",
-      email: "test@organization.one",
-      is_verified: true,
-      code: "TSTORG1"
-    },
-    name: "Test Bigas",
-    region: "National Capital Region",
-    address: "Test address",
-    quantity: 3,
-    unit: "kg",
-    price: 3000,
-    description: "Test description",
-  },
-  {
-    index: 3,
-    supplier: {
-      organization: "Test Organization 2",
-      first_name: "Organization",
-      last_name: "Two",
-      mobile: "1234567890",
-      email: "test@organization.two",
-      is_verified: true,
-      code: "TSTORG2"
-    },
-    name: "Test Banana",
-    region: "Cordillera Administrative Region",
-    address: "Test address",
-    quantity: 4,
-    unit: "kg",
-    price: 2000,
-    description: "Test description",
-  },
-];
 const columns = [
   {
     dataField: "id",
@@ -138,44 +83,53 @@ async function fetchSupplier (id) {
 
 let state = false;
 const TableSearch = (props) => {
-    let input;
-    const handleClick = () => {
-        if (state) {
-          props.onClear();
-          input.value = '';
-        }
-        else props.onSearch(input.value);
-        state = !state;
+  let input;
+  const handleClick = () => {
+    if (state) {
+      props.onClear();
+      input.value = '';
     }
-    return (
-        <Container>
-            <Row>
-                <Col sm={8}></Col>
-                <Col sm={4}>
-                    <InputGroup className="mb-3">
-                        <FormControl
-                            placeholder="Search Supply"
-                            ref={ n => input = n }/>
-                        <InputGroup.Append>
-                            <Button
-                              variant="outline-secondary"
-                              onClick={ handleClick }>
-                              { state? 'Clear': 'Search' }
-                            </Button>
-                        </InputGroup.Append>
-                    </InputGroup>
-                </Col>
-            </Row>
-        </Container>
-    );
+    else props.onSearch(input.value);
+    state = !state;
+  }
+  return (
+    <Container>
+      <Row>
+        <Col sm={8}></Col>
+        <Col sm={4}>
+          <InputGroup className="mb-3">
+            <FormControl
+              placeholder="Search Supply"
+              ref={ n => input = n }/>
+            <InputGroup.Append>
+              <Button
+                variant="outline-secondary"
+                onClick={ handleClick }>
+                { state? 'Clear': 'Search' }
+              </Button>
+            </InputGroup.Append>
+          </InputGroup>
+        </Col>
+      </Row>
+    </Container>
+  );
 };
 
 function SupplyList({ auth }) {
   const [supplies, setSupplies] = useState([]);
   const [supplier, setSupplier] = useState({});
 
+  const options = {
+    custom: true,
+    totalSize: supplies.length,
+    sizePerPage: 5,
+  };
+
+  const getTotalPages = (size, sizePerPage) => Math.ceil(size/sizePerPage);
+
   const expandRow = {
     onlyOneExpanding: true,
+    animate: false,
     onExpand: async (row, isExpand, rowIndex, e) => {
       const supplier = await fetchSupplier(row.supplier);
       setSupplier(supplier);
@@ -199,6 +153,20 @@ function SupplyList({ auth }) {
     ),
   };
 
+  const handleNextPage = ({ page, onPageChange }) => () => {
+    const resultingPage = page + 1;
+    if (resultingPage <= getTotalPages(supplies.length, 5)) onPageChange(resultingPage);
+  };
+
+  const handlePrevPage = ({ page, onPageChange }) => () => {
+    const resultingPage = page - 1;
+    if (resultingPage > 0 ) onPageChange(resultingPage);
+  };
+
+  const handleSizePerPage = ({ page, onSizePerPageChange }, newSizePerPage) => {
+    onSizePerPageChange(newSizePerPage, page);
+  };
+
   useEffect(() => {
     async function fetchSupplies() {
       let returnData = [];
@@ -214,11 +182,6 @@ function SupplyList({ auth }) {
     fetchSupplies();
   }, []);
 
-  const pagination = paginationFactory({
-    totalSize: supplies.length,
-    sizePerPage: 5,
-  });
-
   return (
     <div className="SupplyList">
       <div>
@@ -230,24 +193,48 @@ function SupplyList({ auth }) {
         <Card className='main-card'>
           <Card.Body>
             <ToolkitProvider
-                keyField='id'
-                data={ supplies }
-                columns={ columns }
-                search
+              keyField='id'
+              data={ supplies }
+              columns={ columns }
+              search
             >
               {
                 props => (
                     <div>
                         <TableSearch { ...props.searchProps } />
-                        <BootstrapTable
-                          { ...props.baseProps }
-                          bordered={ false }
-                          pagination={ pagination }
-                          filter={ filterFactory() }
-                          expandRow={ expandRow }
-                          bootstrap4
-                          filterPosition="bottom"
-                        />
+                        <PaginationProvider
+                          pagination={ paginationFactory(options) }>
+                          {
+                            ({
+                              paginationProps,
+                              paginationTableProps
+                            }) => (
+                              <Container>
+                                <Row>
+                                  <Col sm={12}>
+                                    <BootstrapTable
+                                      { ...props.baseProps }
+                                      bordered={ false }
+                                      filter={ filterFactory() }
+                                      expandRow={ expandRow }
+                                      bootstrap4
+                                      filterPosition="bottom"
+                                      { ...paginationTableProps }
+                                    />
+                                  </Col>
+                                  <Col sm={9}></Col>
+                                  <Col sm={1}>
+                                    <CaretLeftFill onClick={ handlePrevPage(paginationProps) }/>
+                                  </Col>
+                                  <Col sm={1}>{ paginationProps.page }</Col>
+                                  <Col sm={1}>
+                                    <CaretRightFill onClick={ handleNextPage(paginationProps) }/>
+                                  </Col>
+                                </Row>
+                              </Container>
+                            )
+                          }
+                        </PaginationProvider>
                     </div>
                 )
               }
