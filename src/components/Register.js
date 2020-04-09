@@ -1,19 +1,33 @@
 import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+import {register} from '../actions/auth';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+
 //handleRegSubmit(regUsername, regPassword, regConfirmPassword, regEmail, regMobile, regDept);
-function Register(){
+function Register({register, isAuthenticated}){
     const [regUsername, setRegUsername]=useState("");
     const [regPassword, setRegPassword]=useState("");
     const [regConfirmPassword, setRegConfirmPassword] = useState("");
     const [regEmail, setRegEmail] = useState("");
     const [regMobile, setRegMobile] = useState("");
     const [regDept, setRegDept] = useState("");
+    if(isAuthenticated){
+        return <Redirect to="/supply-list"/>;
+    }
     return(
-        <div className="Register">
+        <div className="Register col-md-6 m-auto">
+            <div className="card card-body mt-5">
             <h4 >Create an account</h4>
-            <Form  onSubmit={(e)=>{e.preventDefault();}}>
+            <Form onSubmit = {
+                (e)=>{ 
+                    console.log("hello");
+                    e.preventDefault();
+                    register(regEmail, regUsername, regMobile, regDept, regPassword, regConfirmPassword);
+                }
+            }>
                 <Form.Group>
                     <Form.Label>Email</Form.Label>
                     <Form.Control 
@@ -58,7 +72,19 @@ function Register(){
             </Form>
             <p> Already have an account? <Link to="/login">Log in</Link></p>
         </div>
+        </div>
     )
 }
 
-export default Register;
+Register.propTypes={
+    register: PropTypes.func.isRequired,
+    isAuthenticated: PropTypes.bool
+}
+
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(mapStateToProps, 
+    { register })
+    (Register);
