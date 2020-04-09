@@ -2,25 +2,39 @@ import filterFactory, {
   textFilter,
   numberFilter,
 } from "react-bootstrap-table2-filter";
+import 'react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min.css';
 import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
 import paginationFactory from "react-bootstrap-table2-paginator";
+import ToolkitProvider from 'react-bootstrap-table2-toolkit';
 import BootstrapTable from "react-bootstrap-table-next";
-import CardColumns from "react-bootstrap/CardColumns";
+import FormControl from 'react-bootstrap/FormControl';
+import InputGroup from 'react-bootstrap/InputGroup';
 import Jumbotron from "react-bootstrap/Jumbotron";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import "../stylesheets/SupplyList.css";
 import SupplyForm from "./SupplyForm.js";
 import Card from "react-bootstrap/Card";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import PropTypes from "prop-types";
+import axios from "axios";
 
 const supplies = [
   {
     index: 1,
-    supplier: "Test supplier",
+    supplier: {
+      organization: "Test Organization 1",
+      first_name: "Organization",
+      last_name: "One",
+      mobile: "1234567890",
+      email: "test@organization.one",
+      is_verified: true,
+      code: "TSTORG1"
+    },
     name: "Test Card",
     region: "National Capital Region",
     address: "Test address",
@@ -28,123 +42,183 @@ const supplies = [
     unit: "kg",
     price: 1000,
     description: "Test description",
-    is_validated: true,
   },
   {
     index: 2,
-    supplier: "Test supplier",
-    name: "Test Card",
+    supplier: {
+      organization: "Test Organization 1",
+      first_name: "Organization",
+      last_name: "One",
+      mobile: "1234567890",
+      email: "test@organization.one",
+      is_verified: true,
+      code: "TSTORG1"
+    },
+    name: "Test Bigas",
     region: "National Capital Region",
     address: "Test address",
     quantity: 3,
     unit: "kg",
     price: 3000,
     description: "Test description",
-    is_validated: true,
   },
   {
     index: 3,
-    supplier: "Test supplier",
-    name: "Test Card",
-    region: "National Capital Region",
+    supplier: {
+      organization: "Test Organization 2",
+      first_name: "Organization",
+      last_name: "Two",
+      mobile: "1234567890",
+      email: "test@organization.two",
+      is_verified: true,
+      code: "TSTORG2"
+    },
+    name: "Test Banana",
+    region: "Cordillera Administrative Region",
     address: "Test address",
     quantity: 4,
     unit: "kg",
     price: 2000,
     description: "Test description",
-    is_validated: true,
   },
 ];
 const columns = [
   {
-    dataField: "index",
+    dataField: "id",
     text: "ID",
-    filter: textFilter(),
+    sort: true,
+    searchable: false,
   },
   {
     dataField: "name",
-    text: "Supply",
-    filter: textFilter(),
+    text: "Name"
   },
   {
     dataField: "region",
-    text: "Current Region",
-    filter: textFilter(),
-  },
-  {
-    dataField: "address",
-    text: "Current Location",
+    text: "Region",
+    sort: true,
+    searchable: false,
     filter: textFilter(),
   },
   {
     dataField: "quantity",
     text: "Quantity",
     sort: true,
+    searchable: false,
     filter: textFilter(),
   },
   {
     dataField: "unit",
     text: "Unit",
+    searchable: false,
   },
   {
     dataField: "price",
     text: "Price",
     sort: true,
+    searchable: false,
     filter: textFilter(),
   },
-  {
-    dataField: "description",
-    text: "Description",
-  },
 ];
-const pagination = paginationFactory({
-  totalSize: supplies.length,
-  sizePerPage: 5,
-});
 
-var supplyList = supplies.map((supply) => {
-  var totalPrice = 1000;
-  return (
-    <Card key={supply.index}>
-      <Card.Body>
-        <Card.Title>
-          Item Name: {supply.name}
-          <div style={{ textAlign: "right" }}>
-            <Button
-              onClick={() => console.log(supply.index)}
-              variant="outline-danger"
-            >
-              <svg
-                class="bi bi-trash"
-                width="1em"
-                height="1em"
-                viewBox="0 0 16 16"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M5.5 5.5A.5.5 0 016 6v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm3 .5a.5.5 0 00-1 0v6a.5.5 0 001 0V6z" />
-                <path
-                  fill-rule="evenodd"
-                  d="M14.5 3a1 1 0 01-1 1H13v9a2 2 0 01-2 2H5a2 2 0 01-2-2V4h-.5a1 1 0 01-1-1V2a1 1 0 011-1H6a1 1 0 011-1h2a1 1 0 011 1h3.5a1 1 0 011 1v1zM4.118 4L4 4.059V13a1 1 0 001 1h6a1 1 0 001-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </Button>
-          </div>
-        </Card.Title>
-        <Card.Subtitle>Address: {supply.address}</Card.Subtitle>
-        <hr />
-        <p>Description</p>
-        <p className="supply-description">{supply.description}</p>
-        <Card.Subtitle>
-          {supply.amount} for Php{totalPrice}
-        </Card.Subtitle>
-      </Card.Body>
-    </Card>
-  );
-});
+async function fetchSupplier (id) {
+  let returnData = {};
+  try {
+    const supplier = await axios
+      .get(`http://localhost:8000/api/supplier/${id}`);
+    const { data, status } = supplier;
+    if (status !== 200) throw new Error("Error in getSupply call.");
+    returnData = data;
+  } catch (e) {
+    console.log(e);
+    returnData = false;
+  }
+  return returnData;
+}
+
+let state = false;
+const TableSearch = (props) => {
+    let input;
+    const handleClick = () => {
+        if (state) {
+          props.onClear();
+          input.value = '';
+        }
+        else props.onSearch(input.value);
+        state = !state;
+    }
+    return (
+        <Container>
+            <Row>
+                <Col sm={8}></Col>
+                <Col sm={4}>
+                    <InputGroup className="mb-3">
+                        <FormControl
+                            placeholder="Search Supply"
+                            ref={ n => input = n }/>
+                        <InputGroup.Append>
+                            <Button
+                              variant="outline-secondary"
+                              onClick={ handleClick }>
+                              { state? 'Clear': 'Search' }
+                            </Button>
+                        </InputGroup.Append>
+                    </InputGroup>
+                </Col>
+            </Row>
+        </Container>
+    );
+};
 
 function SupplyList({ auth }) {
+  const [supplies, setSupplies] = useState([]);
+  const [supplier, setSupplier] = useState({});
+
+  const expandRow = {
+    onlyOneExpanding: true,
+    onExpand: async (row, isExpand, rowIndex, e) => {
+      const supplier = await fetchSupplier(row.supplier);
+      setSupplier(supplier);
+    },
+    renderer: row => (
+      <Container>
+        <Row>
+          <Col sm={4}>
+            <p>{`Supply Address: ${row.address}`}</p>
+            <p>{`Supply Description: ${row.description}`}</p>
+          </Col>
+          <Col sm={8}>
+            <p>{`Supplier: ${supplier.first_name} ${supplier.last_name}`}</p>
+            <p>{`Organization: ${supplier.organization}`}</p>
+            <p>Contact Information:</p>
+            <p>{`Mobile Number - ${supplier.mobile}`}</p>
+            <p>{`Email - ${supplier.email}`}</p>
+          </Col>
+        </Row>
+      </Container>
+    ),
+  };
+
+  useEffect(() => {
+    async function fetchSupplies() {
+      let returnData = [];
+      try {
+        const getSupply = await axios.get("http://localhost:8000/api/supply");
+        const { data, status } = getSupply;
+        if (status !== 200) throw new Error("Error in getSupply call.");
+        setSupplies(data);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    fetchSupplies();
+  }, []);
+
+  const pagination = paginationFactory({
+    totalSize: supplies.length,
+    sizePerPage: 5,
+  });
+
   return (
     <div className="SupplyList">
       <div>
@@ -153,17 +227,31 @@ function SupplyList({ auth }) {
         </Jumbotron>
       </div>
       <Container>
-        <Card>
+        <Card className='main-card'>
           <Card.Body>
-            <BootstrapTable
-              keyField="index"
-              data={supplies}
-              columns={columns}
-              bordered={false}
-              pagination={pagination}
-              filter={filterFactory()}
-              bootstrap4
-            />
+            <ToolkitProvider
+                keyField='id'
+                data={ supplies }
+                columns={ columns }
+                search
+            >
+              {
+                props => (
+                    <div>
+                        <TableSearch { ...props.searchProps } />
+                        <BootstrapTable
+                          { ...props.baseProps }
+                          bordered={ false }
+                          pagination={ pagination }
+                          filter={ filterFactory() }
+                          expandRow={ expandRow }
+                          bootstrap4
+                          filterPosition="bottom"
+                        />
+                    </div>
+                )
+              }
+            </ToolkitProvider>
           </Card.Body>
         </Card>
       </Container>
