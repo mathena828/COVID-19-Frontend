@@ -3,7 +3,11 @@ import filterFactory, {
   numberFilter,
 } from "react-bootstrap-table2-filter";
 import {
+  Archive,
+  InfoCircle,
+  CaretLeft,
   CaretLeftFill,
+  CaretRight,
   CaretRightFill,
 } from 'react-bootstrap-icons';
 import ToolkitProvider from 'react-bootstrap-table2-toolkit';
@@ -13,14 +17,16 @@ import paginationFactory, { PaginationProvider } from "react-bootstrap-table2-pa
 import BootstrapTable from "react-bootstrap-table-next";
 import FormControl from 'react-bootstrap/FormControl';
 import InputGroup from 'react-bootstrap/InputGroup';
+import React, { useState, useEffect } from "react";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import Container from "react-bootstrap/Container";
+import Dropdown from 'react-bootstrap/Dropdown'
 import Button from "react-bootstrap/Button";
 import "../stylesheets/SupplyList.css";
 import SupplyForm from "./SupplyForm.js";
 import Card from "react-bootstrap/Card";
-import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import Form from 'react-bootstrap/Form';
 import { connect } from "react-redux";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -81,16 +87,52 @@ async function fetchSupplier (id) {
   return returnData;
 }
 
-let state = false;
+const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
+  <a
+    href=""
+    ref={ref}
+    onClick={(e) => {
+      e.preventDefault();
+      onClick(e);
+    }}
+  >
+    {children}
+  </a>
+));
+
+const CustomMenu = React.forwardRef(
+  ({ children, style, className, 'aria-labelledby': labeledBy }, ref) => {
+    const [value, setValue] = useState('');
+
+    return (
+      <div
+        ref={ref}
+        style={style}
+        className={className}
+        aria-labelledby={labeledBy}
+      >
+        <ul className="list-unstyled">
+          {React.Children.toArray(children).filter(
+            (child) =>
+              !value || child.props.children.toLowerCase().startsWith(value),
+          )}
+        </ul>
+      </div>
+    );
+  },
+);
+
+
 const TableSearch = (props) => {
+  const [searching, setSearching] = useState(false);
   let input;
   const handleClick = () => {
-    if (state) {
+    if (searching) {
       props.onClear();
       input.value = '';
     }
     else props.onSearch(input.value);
-    state = !state;
+    setSearching(!searching);
   }
   return (
     <Container>
@@ -105,7 +147,7 @@ const TableSearch = (props) => {
               <Button
                 variant="outline-secondary"
                 onClick={ handleClick }>
-                { state? 'Clear': 'Search' }
+                { searching? 'Clear': 'Search' }
               </Button>
             </InputGroup.Append>
           </InputGroup>
@@ -118,6 +160,8 @@ const TableSearch = (props) => {
 function SupplyList({ auth }) {
   const [supplies, setSupplies] = useState([]);
   const [supplier, setSupplier] = useState({});
+  const [sizesPerPageSettings, setSizesPerPageSettings] =
+    useState([true, false, false, false, false, false]);
 
   const options = {
     custom: true,
@@ -137,16 +181,59 @@ function SupplyList({ auth }) {
     renderer: row => (
       <Container>
         <Row>
-          <Col sm={4}>
-            <p>{`Supply Address: ${row.address}`}</p>
-            <p>{`Supply Description: ${row.description}`}</p>
-          </Col>
           <Col sm={8}>
-            <p>{`Supplier: ${supplier.first_name} ${supplier.last_name}`}</p>
-            <p>{`Organization: ${supplier.organization}`}</p>
-            <p>Contact Information:</p>
-            <p>{`Mobile Number - ${supplier.mobile}`}</p>
-            <p>{`Email - ${supplier.email}`}</p>
+            <Form className="row-information">
+              <Form.Group as={Row}>
+                <Form.Label column sm={2}>
+                  Description
+                </Form.Label>
+                <Col sm={10}>
+                  <Form.Control
+                    as="textarea"
+                    placeholder="Supply Description"
+                    value={row.address}
+                    disabled />
+                </Col>
+              </Form.Group>
+              <Form.Group as={Row}>
+                <Form.Label column sm={2}>
+                  Address
+                </Form.Label>
+                <Col sm={10}>
+                  <Form.Control
+                    placeholder="Supply Address"
+                    value={row.address}
+                    disabled />
+                </Col>
+              </Form.Group>
+            </Form>
+          </Col>
+          <Col sm={4}>
+            <Container className="row-information">
+              <Row className="form-group">
+                <Col sm={4} className="form-label col-form-label">Supplier</Col>
+                <Col sm={8} className="form-label col-form-label">
+                  {`${supplier.first_name} ${supplier.last_name}, ${supplier.organization}`}{' '}
+                </Col>
+              </Row>
+              <Row>
+                <Col sm={4} className="form-label col-form-label">
+                  Contact Info
+                </Col>
+                <Col sm={8} className="form-label col-form-label">
+                  {`${supplier.mobile} / ${supplier.email}`}
+                </Col>
+              </Row>
+            </Container>
+          </Col>
+        </Row>
+        <Row>
+          <Col sm={8}></Col>
+          <Col sm={2}>
+            <InfoCircle/> {' Go to Supplier Page '}
+          </Col>
+          <Col sm={2}>
+            <Archive/> {' Delete Supply Entry '}
           </Col>
         </Row>
       </Container>
@@ -189,11 +276,14 @@ function SupplyList({ auth }) {
           <h1>Supply List</h1>
         </Jumbotron>
       </div>
-      <Container>
-        <Card className='main-card'>
+
+      <Container
+        className="main-card-container"
+        fluid="lg">
+        <Card className="main-card">
           <Card.Body>
             <ToolkitProvider
-              keyField='id'
+              keyField="id"
               data={ supplies }
               columns={ columns }
               search
@@ -222,13 +312,68 @@ function SupplyList({ auth }) {
                                       { ...paginationTableProps }
                                     />
                                   </Col>
-                                  <Col sm={9}></Col>
+                                  <Col sm={11}></Col>
                                   <Col sm={1}>
-                                    <CaretLeftFill onClick={ handlePrevPage(paginationProps) }/>
-                                  </Col>
-                                  <Col sm={1}>{ paginationProps.page }</Col>
-                                  <Col sm={1}>
-                                    <CaretRightFill onClick={ handleNextPage(paginationProps) }/>
+                                    <Dropdown>
+                                      {
+                                        paginationProps.page !== 1?
+                                          <CaretLeftFill onClick={ handlePrevPage(paginationProps) }/> :
+                                          <CaretLeft/>
+                                      }
+                                      <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
+                                        { `${paginationProps.page} of ${getTotalPages(supplies.length, 5)}` }
+                                      </Dropdown.Toggle>
+                                      {
+                                        paginationProps.page !== getTotalPages(supplies.length, 5)?
+                                          <CaretRightFill onClick={ handleNextPage(paginationProps) }/> :
+                                          <CaretRight/>
+                                      }
+
+                                      <Dropdown.Menu as={CustomMenu}>
+                                        <Dropdown.Item
+                                          eventKey="0"
+                                          onClick={ () => handleSizePerPage(
+                                            paginationProps,
+                                            5,
+                                          ) }
+                                          >5</Dropdown.Item>
+                                        <Dropdown.Item
+                                          eventKey="1"
+                                          onClick={ () => handleSizePerPage(
+                                            paginationProps,
+                                            10,
+                                          ) }
+                                          >10</Dropdown.Item>
+                                        <Dropdown.Item
+                                          eventKey="2"
+                                          onClick={ () => handleSizePerPage(
+                                            paginationProps,
+                                            25,
+                                          ) }
+                                          >25</Dropdown.Item>
+                                        <Dropdown.Item
+                                          eventKey="3"
+                                          onClick={ () => handleSizePerPage(
+                                            paginationProps,
+                                            50,
+                                          ) }
+                                          >50</Dropdown.Item>
+                                        <Dropdown.Item
+                                          eventKey="4"
+                                          onClick={ () => handleSizePerPage(
+                                            paginationProps,
+                                            100,
+                                          ) }
+                                          >100</Dropdown.Item>
+                                        <Dropdown.Item
+                                          eventKey="5"
+                                          onClick={ () => handleSizePerPage(
+                                            paginationProps,
+                                            supplies.length,
+                                          ) }
+                                          >All</Dropdown.Item>
+                                      </Dropdown.Menu>
+                                    </Dropdown>
                                   </Col>
                                 </Row>
                               </Container>
