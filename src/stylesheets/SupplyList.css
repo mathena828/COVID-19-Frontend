@@ -31,3 +31,9 @@ th {
     overflow-x: auto;
     white-space: nowrap;
 }
+
+.a-delete {
+  color: #dc3545 !important;
+}
+
+.modal-delete {}

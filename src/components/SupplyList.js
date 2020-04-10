@@ -1,91 +1,44 @@
+/* eslint-disable no-undef */
 import filterFactory, {
   textFilter,
   numberFilter,
 } from "react-bootstrap-table2-filter";
 import {
   Archive,
+  Pencil,
+  Check,
   InfoCircle,
   CaretLeft,
   CaretLeftFill,
   CaretRight,
   CaretRightFill,
 } from 'react-bootstrap-icons';
-import ToolkitProvider from 'react-bootstrap-table2-toolkit';
+import paginationFactory, { PaginationProvider } from "react-bootstrap-table2-paginator";
 import 'react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min.css';
 import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
-import paginationFactory, { PaginationProvider } from "react-bootstrap-table2-paginator";
+import ToolkitProvider from 'react-bootstrap-table2-toolkit';
+import cellEditFactory, { Type } from 'react-bootstrap-table2-editor';
 import BootstrapTable from "react-bootstrap-table-next";
 import FormControl from 'react-bootstrap/FormControl';
 import InputGroup from 'react-bootstrap/InputGroup';
 import React, { useState, useEffect } from "react";
+import Constants from "../constants/SupplyList.js";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import Container from "react-bootstrap/Container";
-import Dropdown from 'react-bootstrap/Dropdown'
+import Dropdown from 'react-bootstrap/Dropdown';
+import sanitizeHtml from 'sanitize-html-react';
 import Button from "react-bootstrap/Button";
-import "../stylesheets/SupplyList.css";
+import Modal from 'react-bootstrap/Modal';
 import SupplyForm from "./SupplyForm.js";
 import Card from "react-bootstrap/Card";
 import { Link } from "react-router-dom";
 import Form from 'react-bootstrap/Form';
+import "../stylesheets/SupplyList.css";
 import { connect } from "react-redux";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import PropTypes from "prop-types";
 import axios from "axios";
-
-const columns = [
-  {
-    dataField: "id",
-    text: "ID",
-    sort: true,
-    searchable: false,
-  },
-  {
-    dataField: "name",
-    text: "Name"
-  },
-  {
-    dataField: "region",
-    text: "Region",
-    sort: true,
-    searchable: false,
-    filter: textFilter(),
-  },
-  {
-    dataField: "quantity",
-    text: "Quantity",
-    sort: true,
-    searchable: false,
-    filter: textFilter(),
-  },
-  {
-    dataField: "unit",
-    text: "Unit",
-    searchable: false,
-  },
-  {
-    dataField: "price",
-    text: "Price",
-    sort: true,
-    searchable: false,
-    filter: textFilter(),
-  },
-];
-
-async function fetchSupplier (id) {
-  let returnData = {};
-  try {
-    const supplier = await axios
-      .get(`http://localhost:8000/api/supplier/${id}`);
-    const { data, status } = supplier;
-    if (status !== 200) throw new Error("Error in getSupply call.");
-    returnData = data;
-  } catch (e) {
-    console.log(e);
-    returnData = false;
-  }
-  return returnData;
-}
 
 const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
   <a
@@ -122,7 +75,6 @@ const CustomMenu = React.forwardRef(
   },
 );
 
-
 const TableSearch = (props) => {
   const [searching, setSearching] = useState(false);
   let input;
@@ -157,11 +109,241 @@ const TableSearch = (props) => {
   );
 };
 
+async function fetchSupplier (id) {
+  try {
+    const result = await axios
+      .get(`http://localhost:8000/api/supplier/${id}`);
+    const { data, status } = result;
+    if (status < 100 || status >= 400) throw new Error("Error in fetchSupplier call.");
+    return data;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+async function fetchSupplies() {
+  try {
+    const result = await axios.get("http://localhost:8000/api/supply");
+    const { data, status } = result;
+    if (status < 100 || status >= 400) throw new Error("Error in fetchSupplies call.");
+    return data;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+async function updateSupply (supply) {
+  try {
+    const result = await axios
+      .put(`http://localhost:8000/api/supply/${supply.id}/`, supply);
+    const { data, status } = result;
+    if (status < 100 || status >= 400) throw new Error("Error in updateSupply call.");
+    return data;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+async function deleteSupply (id) {
+  try {
+    const result = await axios
+      .delete(`http://localhost:8000/api/supply/${id}/`);
+    const { data, status } = result;
+    if (status < 100 || status >= 400) throw new Error("Error in deleteSupply call.");
+    return status;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+async function validateColumn (newVal, row, col, setSupplies) {
+  const { dataField } = col;
+  let updatedObj = { ...row };
+
+  switch (dataField) {
+    case "name":
+      const sanitizedName = sanitizeHtml(newVal, Constants.SANITIZE_HTML_OPTIONS);
+      if (sanitizedName.length > Constants.MODEL_VALIDATION.MAX_NAME_ADDRESS) {
+        return {
+          valid: false,
+          message: `Name should not be more than ${Constants.MODEL_VALIDATION.MAX_NAME_ADDRESS} chars.`
+        };
+      } else updatedObj["name"] = sanitizedName;
+      break;
+    case "quantity":
+      const integerizedQuantity = parseInt(newVal);
+      if (!Number.isInteger(integerizedQuantity)) {
+        return {
+          valid: false,
+          message: `Quantity should be an integer.`
+        };
+      }
+      updatedObj["quantity"] = integerizedQuantity;
+      break;
+    case "price":
+      if (!Number.isInteger(parseInt(newVal)) || !newVal.includes(".")) {
+        return {
+          valid: false,
+          message: `Price should be a float.`
+        };
+      }
+      const decimalizedPrice = parseFloat(newVal).toFixed(2);
+      updatedObj["price"] = decimalizedPrice;
+      break;
+    case "unit":
+      updatedObj["unit"] = newVal;
+      break;
+    default:
+      updatedObj["region"] = newVal;
+  }
+
+  try {
+    const update = await updateSupply(updatedObj);
+    if (!update) throw new Error("Error in updateSupply call.");
+
+    const supplies = await fetchSupplies();
+    if (!supplies) throw new Error("Error in recurringFetch call.");
+
+    setSupplies(supplies);
+  } catch (e) {
+    console.log(e);
+  }
+  return true;
+}
+
+async function onClickExpandEditButton ( index, supply, updatedField, fieldsEditableState, setFieldsEditableState, setSupplies ) {
+  if (fieldsEditableState[index]) {
+    let updatedObj = { ...supply };
+    const sanitized = sanitizeHtml(updatedField, Constants.SANITIZE_HTML_OPTIONS);
+    if (index === 0) {
+      updatedObj["description"] = sanitized;
+    }
+    else {
+      if (sanitizedName.length > Constants.MODEL_VALIDATION.MAX_NAME_ADDRESS)
+        console.log("Handle max address char error here!");
+      else updatedObj["address"] = sanitized;
+    }
+
+    try {
+      const update = await updateSupply(updatedObj);
+      if (!update) throw new Error("Error in updateSupply call.");
+
+      const supplies = await fetchSupplies();
+      if (!supplies) throw new Error("Error in recurringFetch call.");
+
+      setSupplies(supplies);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  switch (index) {
+    case 0:
+      setFieldsEditableState([
+        !fieldsEditableState[0],
+        fieldsEditableState[1],
+      ]);
+      break;
+    default:
+      setFieldsEditableState([
+        fieldsEditableState[0],
+        !fieldsEditableState[1],
+      ]);
+  }
+}
+
 function SupplyList({ auth }) {
+  function onChangeExpandEditFields ( event ) {
+    const { name, value } = event.target;
+    if (name === 'description') setExpandDescription(value);
+    else setExpandAddress(value);
+  }
+  async function deleteSelected(id) {
+    try {
+      const deletion = await deleteSupply(id);
+      console.log(deletion);
+      if (!deletion) throw new Error("Error in deleteSupply call.");
+
+      const supplies = await fetchSupplies();
+      if (!supplies) throw new Error("Error in recurringFetch call.");
+
+      setSupplies(supplies);
+      handleClose();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   const [supplies, setSupplies] = useState([]);
   const [supplier, setSupplier] = useState({});
-  const [sizesPerPageSettings, setSizesPerPageSettings] =
-    useState([true, false, false, false, false, false]);
+  const [expandFieldsEditableState, setExpandFieldsEditableState] =
+    useState([false, false]);
+  const [expandDescription, setExpandDescription] = useState('');
+  const [expandAddress, setExpandAddress] = useState('');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const handleClose = () => setShowDeleteModal(false);
+  const handleShow = () => setShowDeleteModal(true);
+
+  const columns = [
+    {
+      dataField: "id",
+      text: "ID",
+      sort: true,
+      searchable: false,
+    },
+    {
+      dataField: "name",
+      text: "Name",
+      validator: (newValue, row, column) =>
+        validateColumn(newValue, row, column, setSupplies),
+    },
+    {
+      dataField: "region",
+      text: "Region",
+      sort: true,
+      searchable: false,
+      editor: {
+        type: Type.SELECT,
+        options: Constants.REGIONS,
+      },
+      filter: textFilter(),
+      validator: (newValue, row, column) =>
+        validateColumn(newValue, row, column, setSupplies),
+    },
+    {
+      dataField: "quantity",
+      text: "Quantity",
+      sort: true,
+      searchable: false,
+      filter: textFilter(),
+      validator: (newValue, row, column) =>
+        validateColumn(newValue, row, column, setSupplies),
+    },
+    {
+      dataField: "unit",
+      text: "Unit",
+      searchable: false,
+      editor: {
+        type: Type.SELECT,
+        options: Constants.UNITS,
+      },
+      validator: (newValue, row, column) =>
+        validateColumn(newValue, row, column, setSupplies),
+    },
+    {
+      dataField: "price",
+      text: "Price",
+      sort: true,
+      searchable: false,
+      filter: textFilter(),
+      validator: (newValue, row, column) =>
+        validateColumn(newValue, row, column, setSupplies),
+    },
+  ];
 
   const options = {
     custom: true,
@@ -174,53 +356,112 @@ function SupplyList({ auth }) {
   const expandRow = {
     onlyOneExpanding: true,
     animate: false,
+    showExpandColumn: true,
+    expandByColumnOnly: true,
+    expandColumnPosition: 'right',
     onExpand: async (row, isExpand, rowIndex, e) => {
       const supplier = await fetchSupplier(row.supplier);
       setSupplier(supplier);
+      setExpandDescription(row.description);
+      setExpandAddress(row.address);
     },
     renderer: row => (
       <Container>
         <Row>
-          <Col sm={8}>
+          <Col sm={6}>
             <Form className="row-information">
               <Form.Group as={Row}>
-                <Form.Label column sm={2}>
-                  Description
+                <Form.Label column sm={3}>
+                  Description &nbsp;
+                  {
+                    expandFieldsEditableState[0]?
+                      <Check
+                        fill="#007bff"
+                        onClick={ () =>
+                        onClickExpandEditButton(
+                          0,
+                          row,
+                          expandDescription,
+                          expandFieldsEditableState,
+                          setExpandFieldsEditableState,
+                          setSupplies,
+                        ) }/> :
+                      <Pencil
+                        fill="#007bff"
+                        onClick={ () =>
+                        onClickExpandEditButton(
+                          0,
+                          row,
+                          expandDescription,
+                          expandFieldsEditableState,
+                          setExpandFieldsEditableState,
+                          setSupplies,
+                        ) }/>
+                  }
                 </Form.Label>
-                <Col sm={10}>
+                <Col sm={9}>
                   <Form.Control
                     as="textarea"
+                    name="description"
                     placeholder="Supply Description"
-                    value={row.address}
-                    disabled />
+                    defaultValue={expandDescription}
+                    onChange={onChangeExpandEditFields}
+                    disabled={!expandFieldsEditableState[0]} />
                 </Col>
               </Form.Group>
               <Form.Group as={Row}>
-                <Form.Label column sm={2}>
-                  Address
+                <Form.Label column sm={3}>
+                  Address &nbsp;
+                  {
+                    expandFieldsEditableState[1]?
+                      <Check
+                        fill="#007bff"
+                        onClick={ () =>
+                        onClickExpandEditButton(
+                          1,
+                          row,
+                          expandAddress,
+                          expandFieldsEditableState,
+                          setExpandFieldsEditableState,
+                          setSupplies,
+                        ) }/> :
+                      <Pencil
+                        fill="#007bff"
+                        onClick={ () =>
+                        onClickExpandEditButton(
+                          1,
+                          row,
+                          expandAddress,
+                          expandFieldsEditableState,
+                          setExpandFieldsEditableState,
+                          setSupplies,
+                        ) }/>
+                  }
                 </Form.Label>
-                <Col sm={10}>
+                <Col sm={9}>
                   <Form.Control
                     placeholder="Supply Address"
-                    value={row.address}
-                    disabled />
+                    name="address"
+                    defaultValue={expandAddress}
+                    onChange={onChangeExpandEditFields}
+                    disabled={!expandFieldsEditableState[1]} />
                 </Col>
               </Form.Group>
             </Form>
           </Col>
-          <Col sm={4}>
+          <Col sm={6}>
             <Container className="row-information">
               <Row className="form-group">
-                <Col sm={4} className="form-label col-form-label">Supplier</Col>
-                <Col sm={8} className="form-label col-form-label">
+                <Col sm={3} className="form-label col-form-label">Supplier</Col>
+                <Col sm={9} className="form-label col-form-label">
                   {`${supplier.first_name} ${supplier.last_name}, ${supplier.organization}`}{' '}
                 </Col>
               </Row>
               <Row>
-                <Col sm={4} className="form-label col-form-label">
+                <Col sm={3} className="form-label col-form-label">
                   Contact Info
                 </Col>
-                <Col sm={8} className="form-label col-form-label">
+                <Col sm={9} className="form-label col-form-label">
                   {`${supplier.mobile} / ${supplier.email}`}
                 </Col>
               </Row>
@@ -230,12 +471,46 @@ function SupplyList({ auth }) {
         <Row>
           <Col sm={8}></Col>
           <Col sm={2}>
-            <InfoCircle/> {' Go to Supplier Page '}
+            <InfoCircle fill="#17a2b8"/>&nbsp;{'Go to Supplier Page'}
           </Col>
           <Col sm={2}>
-            <Archive/> {' Delete Supply Entry '}
+            <a
+              href="javascript:;"
+              className="a-delete"
+              onClick={ () => handleShow() }>
+              <Archive fill="#dc3545"/> {' Delete Supply Entry '}
+            </a>
           </Col>
         </Row>
+
+        <Modal
+          size="lg"
+          dialogClassName="modal-delete"
+          show={showDeleteModal}
+          onHide={ handleClose }
+          animation={false}
+          centered
+          >
+
+          <Modal.Header closeButton>
+            <Modal.Title>
+              {`Deleting entry: ${row.name}`}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {'Are you sure you want to delete '}
+            <i>{row.name}&nbsp;</i>
+            {' from the supply list?'}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Cancel
+            </Button>
+            <Button variant="danger" onClick={ () => deleteSelected(row.id) }>
+              Delete
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </Container>
     ),
   };
@@ -255,18 +530,16 @@ function SupplyList({ auth }) {
   };
 
   useEffect(() => {
-    async function fetchSupplies() {
-      let returnData = [];
+    async function initialFetch() {
       try {
-        const getSupply = await axios.get("http://localhost:8000/api/supply");
-        const { data, status } = getSupply;
-        if (status !== 200) throw new Error("Error in getSupply call.");
-        setSupplies(data);
+        const supplies = await fetchSupplies();
+        if (!supplies) throw new Error("Error in initialFetch call.");
+        setSupplies(supplies);
       } catch (e) {
         console.log(e);
       }
     }
-    fetchSupplies();
+    initialFetch();
   }, []);
 
   return (
@@ -309,6 +582,13 @@ function SupplyList({ auth }) {
                                       expandRow={ expandRow }
                                       bootstrap4
                                       filterPosition="bottom"
+                                      cellEdit={
+                                        cellEditFactory({
+                                          mode: 'click',
+                                          blurToSave: true,
+                                          autoSelectText: true,
+                                        })
+                                      }
                                       { ...paginationTableProps }
                                     />
                                   </Col>
