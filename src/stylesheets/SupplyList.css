@@ -1,5 +1,17 @@
-.SupplyListPage div.container {
+.main-card-container {
     /* background-color: #577FA7; */
+    margin-bottom: 2rem;
+    max-width: 1280px;
+}
+
+.row-information {
+  margin: 0.5em;
+  padding: 0.5em;
+}
+
+form .row-information {
+  margin: 0.5em;
+  padding: 0.5em;
 }
 
 th {
@@ -19,3 +31,9 @@ th {
     overflow-x: auto;
     white-space: nowrap;
 }
+
+.a-delete {
+  color: #dc3545 !important;
+}
+
+.modal-delete {}
