@@ -284,6 +284,10 @@ function SupplyList({ auth }) {
   const [expandDescription, setExpandDescription] = useState('');
   const [expandAddress, setExpandAddress] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [getWindowDimensions, setWindowDimensions] = useState({
+    height: 0,
+    width: 0,
+  });
 
   const handleClose = () => setShowDeleteModal(false);
   const handleShow = () => setShowDeleteModal(true);
@@ -367,121 +371,486 @@ function SupplyList({ auth }) {
     },
     renderer: row => (
       <Container>
-        <Row>
-          <Col sm={6}>
-            <Form className="row-information">
-              <Form.Group as={Row}>
-                <Form.Label column sm={3}>
-                  Description &nbsp;
-                  {
-                    expandFieldsEditableState[0]?
-                      <Check
-                        fill="#007bff"
-                        onClick={ () =>
-                        onClickExpandEditButton(
-                          0,
-                          row,
-                          expandDescription,
-                          expandFieldsEditableState,
-                          setExpandFieldsEditableState,
-                          setSupplies,
-                        ) }/> :
-                      <Pencil
-                        fill="#007bff"
-                        onClick={ () =>
-                        onClickExpandEditButton(
-                          0,
-                          row,
-                          expandDescription,
-                          expandFieldsEditableState,
-                          setExpandFieldsEditableState,
-                          setSupplies,
-                        ) }/>
-                  }
-                </Form.Label>
-                <Col sm={9}>
-                  <Form.Control
-                    as="textarea"
-                    name="description"
-                    placeholder="Supply Description"
-                    defaultValue={expandDescription}
-                    onChange={onChangeExpandEditFields}
-                    disabled={!expandFieldsEditableState[0]} />
-                </Col>
-              </Form.Group>
-              <Form.Group as={Row}>
-                <Form.Label column sm={3}>
-                  Address &nbsp;
-                  {
-                    expandFieldsEditableState[1]?
-                      <Check
-                        fill="#007bff"
-                        onClick={ () =>
-                        onClickExpandEditButton(
-                          1,
-                          row,
-                          expandAddress,
-                          expandFieldsEditableState,
-                          setExpandFieldsEditableState,
-                          setSupplies,
-                        ) }/> :
-                      <Pencil
-                        fill="#007bff"
-                        onClick={ () =>
-                        onClickExpandEditButton(
-                          1,
-                          row,
-                          expandAddress,
-                          expandFieldsEditableState,
-                          setExpandFieldsEditableState,
-                          setSupplies,
-                        ) }/>
-                  }
-                </Form.Label>
-                <Col sm={9}>
-                  <Form.Control
-                    placeholder="Supply Address"
-                    name="address"
-                    defaultValue={expandAddress}
-                    onChange={onChangeExpandEditFields}
-                    disabled={!expandFieldsEditableState[1]} />
-                </Col>
-              </Form.Group>
-            </Form>
-          </Col>
-          <Col sm={6}>
-            <Container className="row-information">
-              <Row className="form-group">
-                <Col sm={3} className="form-label col-form-label">Supplier</Col>
-                <Col sm={9} className="form-label col-form-label">
-                  {`${supplier.first_name} ${supplier.last_name}, ${supplier.organization}`}{' '}
-                </Col>
-              </Row>
-              <Row>
-                <Col sm={3} className="form-label col-form-label">
-                  Contact Info
-                </Col>
-                <Col sm={9} className="form-label col-form-label">
-                  {`${supplier.mobile} / ${supplier.email}`}
-                </Col>
-              </Row>
-            </Container>
-          </Col>
-        </Row>
-        <Row>
-          <Col sm={8}></Col>
-          <Col sm={2}>
-            <InfoCircle fill="#17a2b8"/>&nbsp;{'Go to Supplier Page'}
-          </Col>
-          <Col sm={2}>
-            <a
-              href="javascript:;"
-              className="a-delete"
-              onClick={ () => handleShow() }>
-              <Archive fill="#dc3545"/> {' Delete Supply Entry '}
-            </a>
-          </Col>
-        </Row>
+        {
+          getWindowDimensions.width >= 1200 &&
+          <div>
+            <Row>
+              <Col sm={6}>
+                <Form className="row-information">
+                  <Form.Group as={Row}>
+                    <Form.Label column sm={3}>
+                      Description &nbsp;
+                      {
+                        expandFieldsEditableState[0]?
+                          <Check
+                            fill="#007bff"
+                            onClick={ () =>
+                            onClickExpandEditButton(
+                              0,
+                              row,
+                              expandDescription,
+                              expandFieldsEditableState,
+                              setExpandFieldsEditableState,
+                              setSupplies,
+                            ) }/> :
+                          <Pencil
+                            fill="#007bff"
+                            onClick={ () =>
+                            onClickExpandEditButton(
+                              0,
+                              row,
+                              expandDescription,
+                              expandFieldsEditableState,
+                              setExpandFieldsEditableState,
+                              setSupplies,
+                            ) }/>
+                      }
+                    </Form.Label>
+                    <Col sm={9}>
+                      <Form.Control
+                        as="textarea"
+                        name="description"
+                        placeholder="Supply Description"
+                        defaultValue={expandDescription}
+                        onChange={onChangeExpandEditFields}
+                        disabled={!expandFieldsEditableState[0]} />
+                    </Col>
+                  </Form.Group>
+                  <Form.Group as={Row}>
+                    <Form.Label column sm={3}>
+                      Address &nbsp;
+                      {
+                        expandFieldsEditableState[1]?
+                          <Check
+                            fill="#007bff"
+                            onClick={ () =>
+                            onClickExpandEditButton(
+                              1,
+                              row,
+                              expandAddress,
+                              expandFieldsEditableState,
+                              setExpandFieldsEditableState,
+                              setSupplies,
+                            ) }/> :
+                          <Pencil
+                            fill="#007bff"
+                            onClick={ () =>
+                            onClickExpandEditButton(
+                              1,
+                              row,
+                              expandAddress,
+                              expandFieldsEditableState,
+                              setExpandFieldsEditableState,
+                              setSupplies,
+                            ) }/>
+                      }
+                    </Form.Label>
+                    <Col sm={9}>
+                      <Form.Control
+                        placeholder="Supply Address"
+                        name="address"
+                        defaultValue={expandAddress}
+                        onChange={onChangeExpandEditFields}
+                        disabled={!expandFieldsEditableState[1]} />
+                    </Col>
+                  </Form.Group>
+                </Form>
+              </Col>
+              <Col sm={6}>
+                <Container className="row-information">
+                  <Row className="form-group">
+                    <Col sm={3} className="form-label col-form-label">Supplier</Col>
+                    <Col sm={9} className="form-label col-form-label">
+                      {`${supplier.first_name} ${supplier.last_name}, ${supplier.organization}`}{' '}
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col sm={3} className="form-label col-form-label">
+                      Contact Info
+                    </Col>
+                    <Col sm={9} className="form-label col-form-label">
+                      {`${supplier.mobile} / ${supplier.email}`}
+                    </Col>
+                  </Row>
+                </Container>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={8}></Col>
+              <Col sm={2}>
+                <InfoCircle fill="#17a2b8"/>&nbsp;{'Go to Supplier Page'}
+              </Col>
+              <Col sm={2}>
+                <a
+                  href="javascript:;"
+                  className="a-delete"
+                  onClick={ () => handleShow() }>
+                  <Archive fill="#dc3545"/> {' Delete Supply Entry '}
+                </a>
+              </Col>
+            </Row>
+          </div>
+        }
+        {
+          (getWindowDimensions.width < 1200 && getWindowDimensions.width >= 990) &&
+          <div>
+            <Row>
+              <Col sm>
+                <Form className="row-information">
+                  <Form.Group as={Row}>
+                    <Form.Label column sm={3}>
+                      Description &nbsp;
+                      {
+                        expandFieldsEditableState[0]?
+                          <Check
+                            fill="#007bff"
+                            onClick={ () =>
+                            onClickExpandEditButton(
+                              0,
+                              row,
+                              expandDescription,
+                              expandFieldsEditableState,
+                              setExpandFieldsEditableState,
+                              setSupplies,
+                            ) }/> :
+                          <Pencil
+                            fill="#007bff"
+                            onClick={ () =>
+                            onClickExpandEditButton(
+                              0,
+                              row,
+                              expandDescription,
+                              expandFieldsEditableState,
+                              setExpandFieldsEditableState,
+                              setSupplies,
+                            ) }/>
+                      }
+                    </Form.Label>
+                    <Col sm={9}>
+                      <Form.Control
+                        as="textarea"
+                        name="description"
+                        placeholder="Supply Description"
+                        defaultValue={expandDescription}
+                        onChange={onChangeExpandEditFields}
+                        disabled={!expandFieldsEditableState[0]} />
+                    </Col>
+                  </Form.Group>
+                  <Form.Group as={Row}>
+                    <Form.Label column sm={3}>
+                      Address &nbsp;
+                      {
+                        expandFieldsEditableState[1]?
+                          <Check
+                            fill="#007bff"
+                            onClick={ () =>
+                            onClickExpandEditButton(
+                              1,
+                              row,
+                              expandAddress,
+                              expandFieldsEditableState,
+                              setExpandFieldsEditableState,
+                              setSupplies,
+                            ) }/> :
+                          <Pencil
+                            fill="#007bff"
+                            onClick={ () =>
+                            onClickExpandEditButton(
+                              1,
+                              row,
+                              expandAddress,
+                              expandFieldsEditableState,
+                              setExpandFieldsEditableState,
+                              setSupplies,
+                            ) }/>
+                      }
+                    </Form.Label>
+                    <Col sm={9}>
+                      <Form.Control
+                        placeholder="Supply Address"
+                        name="address"
+                        defaultValue={expandAddress}
+                        onChange={onChangeExpandEditFields}
+                        disabled={!expandFieldsEditableState[1]} />
+                    </Col>
+                  </Form.Group>
+                </Form>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm>
+                <Container className="row-information">
+                  <Row className="form-group">
+                    <Col sm={3} className="form-label col-form-label">Supplier</Col>
+                    <Col sm={9} className="form-label col-form-label">
+                      {`${supplier.first_name} ${supplier.last_name}, ${supplier.organization}`}{' '}
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col sm={3} className="form-label col-form-label">
+                      Contact Info
+                    </Col>
+                    <Col sm={9} className="form-label col-form-label">
+                      {`${supplier.mobile} / ${supplier.email}`}
+                    </Col>
+                  </Row>
+                </Container>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6} className="justify-content-sm-center">
+                <InfoCircle fill="#17a2b8"/>&nbsp;{'Go to Supplier Page'}
+              </Col>
+              <Col sm={6} className="justify-content-sm-center">
+                <a
+                  href="javascript:;"
+                  className="a-delete"
+                  onClick={ () => handleShow() }>
+                  <Archive fill="#dc3545"/> {' Delete Supply Entry '}
+                </a>
+              </Col>
+            </Row>
+          </div>
+        }
+        {
+          (getWindowDimensions.width < 990 && getWindowDimensions.width >= 575) &&
+          <div>
+            <Row>
+              <Col sm>
+                <Form className="row-information">
+                  <Form.Group as={Row}>
+                    <Form.Label column sm={3}>
+                      Description &nbsp;
+                      {
+                        expandFieldsEditableState[0]?
+                          <Check
+                            fill="#007bff"
+                            onClick={ () =>
+                            onClickExpandEditButton(
+                              0,
+                              row,
+                              expandDescription,
+                              expandFieldsEditableState,
+                              setExpandFieldsEditableState,
+                              setSupplies,
+                            ) }/> :
+                          <Pencil
+                            fill="#007bff"
+                            onClick={ () =>
+                            onClickExpandEditButton(
+                              0,
+                              row,
+                              expandDescription,
+                              expandFieldsEditableState,
+                              setExpandFieldsEditableState,
+                              setSupplies,
+                            ) }/>
+                      }
+                    </Form.Label>
+                    <Col sm={9}>
+                      <Form.Control
+                        as="textarea"
+                        name="description"
+                        placeholder="Supply Description"
+                        defaultValue={expandDescription}
+                        onChange={onChangeExpandEditFields}
+                        disabled={!expandFieldsEditableState[0]} />
+                    </Col>
+                  </Form.Group>
+                  <Form.Group as={Row}>
+                    <Form.Label column sm={3}>
+                      Address &nbsp;
+                      {
+                        expandFieldsEditableState[1]?
+                          <Check
+                            fill="#007bff"
+                            onClick={ () =>
+                            onClickExpandEditButton(
+                              1,
+                              row,
+                              expandAddress,
+                              expandFieldsEditableState,
+                              setExpandFieldsEditableState,
+                              setSupplies,
+                            ) }/> :
+                          <Pencil
+                            fill="#007bff"
+                            onClick={ () =>
+                            onClickExpandEditButton(
+                              1,
+                              row,
+                              expandAddress,
+                              expandFieldsEditableState,
+                              setExpandFieldsEditableState,
+                              setSupplies,
+                            ) }/>
+                      }
+                    </Form.Label>
+                    <Col sm={9}>
+                      <Form.Control
+                        placeholder="Supply Address"
+                        name="address"
+                        defaultValue={expandAddress}
+                        onChange={onChangeExpandEditFields}
+                        disabled={!expandFieldsEditableState[1]} />
+                    </Col>
+                  </Form.Group>
+                </Form>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm>
+                <Container className="row-information">
+                  <Row className="form-group">
+                    <Col sm={3} className="form-label col-form-label">Supplier</Col>
+                    <Col sm={9} className="form-label col-form-label">
+                      {`${supplier.first_name} ${supplier.last_name}, ${supplier.organization}`}{' '}
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col sm={3} className="form-label col-form-label">
+                      Contact Info
+                    </Col>
+                    <Col sm={9} className="form-label col-form-label">
+                      {`${supplier.mobile} / ${supplier.email}`}
+                    </Col>
+                  </Row>
+                </Container>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6} className="text-align-right">
+                <InfoCircle fill="#17a2b8"/>&nbsp;{'Go to Supplier Page'}
+              </Col>
+              <Col sm={6}>
+                <a
+                  href="javascript:;"
+                  className="a-delete"
+                  onClick={ () => handleShow() }>
+                  <Archive fill="#dc3545"/> {' Delete Supply Entry '}
+                </a>
+              </Col>
+            </Row>
+          </div>
+        }
+        {
+          (getWindowDimensions.width < 575) &&
+          <div>
+            <Row>
+              <Col sm={6}>
+                <Form className="row-information">
+                  <Form.Group as={Row}>
+                    <Form.Label column sm={3}>
+                      Description &nbsp;
+                      {
+                        expandFieldsEditableState[0]?
+                          <Check
+                            fill="#007bff"
+                            onClick={ () =>
+                            onClickExpandEditButton(
+                              0,
+                              row,
+                              expandDescription,
+                              expandFieldsEditableState,
+                              setExpandFieldsEditableState,
+                              setSupplies,
+                            ) }/> :
+                          <Pencil
+                            fill="#007bff"
+                            onClick={ () =>
+                            onClickExpandEditButton(
+                              0,
+                              row,
+                              expandDescription,
+                              expandFieldsEditableState,
+                              setExpandFieldsEditableState,
+                              setSupplies,
+                            ) }/>
+                      }
+                    </Form.Label>
+                    <Col sm={9}>
+                      <Form.Control
+                        as="textarea"
+                        name="description"
+                        placeholder="Supply Description"
+                        defaultValue={expandDescription}
+                        onChange={onChangeExpandEditFields}
+                        disabled={!expandFieldsEditableState[0]} />
+                    </Col>
+                  </Form.Group>
+                  <Form.Group as={Row}>
+                    <Form.Label column sm={3}>
+                      Address &nbsp;
+                      {
+                        expandFieldsEditableState[1]?
+                          <Check
+                            fill="#007bff"
+                            onClick={ () =>
+                            onClickExpandEditButton(
+                              1,
+                              row,
+                              expandAddress,
+                              expandFieldsEditableState,
+                              setExpandFieldsEditableState,
+                              setSupplies,
+                            ) }/> :
+                          <Pencil
+                            fill="#007bff"
+                            onClick={ () =>
+                            onClickExpandEditButton(
+                              1,
+                              row,
+                              expandAddress,
+                              expandFieldsEditableState,
+                              setExpandFieldsEditableState,
+                              setSupplies,
+                            ) }/>
+                      }
+                    </Form.Label>
+                    <Col sm={9}>
+                      <Form.Control
+                        placeholder="Supply Address"
+                        name="address"
+                        defaultValue={expandAddress}
+                        onChange={onChangeExpandEditFields}
+                        disabled={!expandFieldsEditableState[1]} />
+                    </Col>
+                  </Form.Group>
+                </Form>
+              </Col>
+              <Col sm={6}>
+                <Container className="row-information">
+                  <Row className="form-group">
+                    <Col sm={3} className="form-label col-form-label">Supplier</Col>
+                    <Col sm={9} className="form-label col-form-label">
+                      {`${supplier.first_name} ${supplier.last_name}, ${supplier.organization}`}{' '}
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col sm={3} className="form-label col-form-label">
+                      Contact Info
+                    </Col>
+                    <Col sm={9} className="form-label col-form-label">
+                      {`${supplier.mobile} / ${supplier.email}`}
+                    </Col>
+                  </Row>
+                </Container>
+              </Col>
+            </Row>
+            <Row>
+              <Col className="text-align-center" sm>
+                <InfoCircle fill="#17a2b8"/>&nbsp;{'Go to Supplier Page'}
+                  &nbsp;
+                <a
+                  href="javascript:;"
+                  className="a-delete"
+                  onClick={ () => handleShow() }>
+                  <Archive fill="#dc3545"/> {' Delete Supply Entry '}
+                </a>
+              </Col>
+            </Row>
+          </div>
+        }
 
         <Modal
           size="lg"
@@ -529,6 +898,16 @@ function SupplyList({ auth }) {
     onSizePerPageChange(newSizePerPage, page);
   };
 
+  const updateDimensions = () => {
+    let height = typeof window !== "undefined" ? window.innerHeight : 0;
+    let width = typeof window !== "undefined" ? window.innerWidth : 0;
+
+    setWindowDimensions({
+      height,
+      width,
+    });
+  };
+
   useEffect(() => {
     async function initialFetch() {
       try {
@@ -540,6 +919,12 @@ function SupplyList({ auth }) {
       }
     }
     initialFetch();
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions);
+
+    return () => {
+      window.removeEventListener("resize", updateDimensions);
+    };
   }, []);
 
   return (

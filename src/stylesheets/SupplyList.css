@@ -37,3 +37,11 @@ th {
 }
 
 .modal-delete {}
+
+.text-align-right {
+  text-align: right !important;
+}
+
+.text-align-center {
+  text-align: center !important;
+}
