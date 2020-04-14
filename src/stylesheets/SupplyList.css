@@ -1,28 +1,47 @@
-.SupplyList div.container {
+.main-card-container {
     /* background-color: #577FA7; */
+    margin-bottom: 2rem;
+    max-width: 1280px;
+}
+
+.row-information {
+  margin: 0.5em;
+  padding: 0.5em;
+}
+
+form .row-information {
+  margin: 0.5em;
+  padding: 0.5em;
 }
 
 th {
     border-top: 0px none !important;
 }
 
-/* .caret {
-  display: inline-block;
-  width: 0;
-  height: 0;
-  margin-left: 2px;
-  vertical-align: middle;
-  border-top: 4px dashed;
-  border-top: 4px solid \9;
-  border-right: 4px solid transparent;
-  border-left: 4px solid transparent;
+.table thead th {
+    border-bottom: 0px none !important;
 }
-.dropup .caret, .navbar-fixed-bottom .dropdown .caret {
-  border-top: 0;
-  border-bottom: 4px dashed;
-  border-bottom: 4px solid \9;
-  content: "";
+
+
+.react-bootstrap-table table {
+    table-layout: auto;
 }
-.table {
-  margin-bottom: 0px;
-} */
+
+.main-card {
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.a-delete {
+  color: #dc3545 !important;
+}
+
+.modal-delete {}
+
+.text-align-right {
+  text-align: right !important;
+}
+
+.text-align-center {
+  text-align: center !important;
+}
