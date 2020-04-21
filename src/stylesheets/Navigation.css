@@ -1,0 +1,22 @@
+.navbar {
+  background-color: #4e73df !important;
+}
+
+.navbar-brand,
+.nav-link {
+  font-weight: bold;
+}
+
+.navbar-brand {
+  font-family: "Open Sans", sans-serif;
+  margin-left: 1em;
+}
+
+.nav-link:hover {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+.btn-primary {
+  background-color: #4e73df !important;
+  border: 0 !important;
+}

@@ -1,7 +1,7 @@
 .main-card-container {
-    /* background-color: #577FA7; */
-    margin-bottom: 2rem;
-    max-width: 1280px;
+  /* background-color: #577FA7; */
+  margin-bottom: 2rem;
+  max-width: 1280px;
 }
 
 .row-information {
@@ -15,28 +15,28 @@ form .row-information {
 }
 
 th {
-    border-top: 0px none !important;
+  border-top: 0px none !important;
 }
 
 .table thead th {
-    border-bottom: 0px none !important;
+  border-bottom: 0px none !important;
 }
 
-
 .react-bootstrap-table table {
-    table-layout: auto;
+  table-layout: auto;
 }
 
 .main-card {
-    overflow-x: auto;
-    white-space: nowrap;
+  overflow-x: auto;
+  white-space: nowrap;
 }
 
 .a-delete {
   color: #dc3545 !important;
 }
 
-.modal-delete {}
+.modal-delete {
+}
 
 .text-align-right {
   text-align: right !important;
@@ -44,4 +44,32 @@ th {
 
 .text-align-center {
   text-align: center !important;
+}
+
+.jumbo-header {
+  font-family: "Open Sans", sans-serif;
+  padding: 20px;
+  background-color: white;
+  margin-bottom: 0.1em;
+}
+
+.jumbo-title,
+.jumbo-instructions {
+  font-weight: bold;
+}
+
+.jumbo-description {
+  border-left: 5px solid #4e73df;
+  padding-left: 10px;
+}
+
+.jumbo-title {
+  color: #4e73df;
+  font-size: 2.5em;
+  margin-bottom: 0;
+}
+
+.jumbo-instructions {
+  color: #5a5c69 !important;
+  font-size: 1.5em !important;
 }

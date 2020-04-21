@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Jumbotron from "react-bootstrap/Jumbotron";
+import { CaretLeft } from "react-bootstrap-icons";
 
 //import Modal from 'react-bootstrap/Modal';
 
@@ -19,7 +20,7 @@ const SupplyForm = ({
   supplies,
   setSupplies,
   navigation,
-  handleSubmit
+  handleSubmit,
 }) => {
   const [formRegion, setRegion] = useState("National Capital Region");
   const [unit, setUnit] = useState("gram");
@@ -30,19 +31,19 @@ const SupplyForm = ({
   const [formDescription, setFormDescription] = useState("");
 
   const { previous } = navigation;
+  const { next } = navigation;
 
   //const [show, setShow] = useState(false);
 
   //const handleClose = () => setShow(false);
   //const handleShow = () => setShow(true);
 
-  var supplyList = supplies.map(supply => {
-    var totalPrice = supply.price * supply.amount;
+  var supplyList = supplies.map((supply) => {
     return (
       <Card key={supply.index}>
         <Card.Body>
           <Card.Title>
-            Item Name: {supply.name}
+            <b>Supply Name:</b> {supply.name}
             <div style={{ textAlign: "right" }}>
               <Button
                 onClick={() => deleteSupply(supply.index)}
@@ -66,33 +67,33 @@ const SupplyForm = ({
               </Button>
             </div>
           </Card.Title>
-          <Card.Subtitle>Address: {supply.address}, {supply.region}</Card.Subtitle>
-          <hr />
-          <p>Description</p>
-          <p className="supply-description">{supply.description}</p>
           <Card.Subtitle>
-            {supply.amount} {supply.unit} for Php{totalPrice}
+            <b>Address:</b> {supply.address}, {supply.region} <br></br>
+            <b>Quantity:</b> {supply.amount} {supply.unit}s <br></br>
+            <b>Price:</b> PHP {supply.price} per {supply.unit} <br></br>
           </Card.Subtitle>
+          <hr />
+          <b>Description</b>
+          <p className="supply-description">{supply.description}</p>
         </Card.Body>
       </Card>
     );
   });
   //fields = ('id','supplier','name','address','region','quantity','unit','price','description','is_validated')
-  
+
   function saveSupply(name, address, region, unit, amount, price, description) {
     var newSupply = {
       name: name,
       address: address,
       amount: amount,
-      unit:unit,
+      unit: unit,
       region: region,
       price: price,
       description: description,
-      index: indexCount
+      index: indexCount,
     };
     indexCount += 1;
     setSupplies([...supplies, newSupply]);
-    
   }
 
   function deleteSupply(supplyIndex) {
@@ -104,31 +105,32 @@ const SupplyForm = ({
   return (
     <div className="SupplyForm">
       <div>
-        <Jumbotron>
-          <Link to="/">
-            <Button variant="outline-secondary">Back to Home</Button>
-          </Link>
-          <h3>
-            Hi, thank you for registering your produce to the site. Just answer
-            this form and we'll be good to go!
-          </h3>
+        <Jumbotron className="jumbo-header">
+          <div className="container jumbo-description">
+            <p className="jumbo-title">SUPPLY INFORMATION</p>
+            <Link to="/" style={{ textDecoration: "none" }}>
+              <p className="jumbo-instructions">
+                <CaretLeft></CaretLeft>Go back to the home page.
+              </p>
+            </Link>
+          </div>
         </Jumbotron>
       </div>
       <div className="container">
         <Form
-          onSubmit={e => {
+          onSubmit={(e) => {
             handleSubmit(orgName, firstName, lastName, email, phone, supplies);
             e.preventDefault();
           }}
         >
-          <h3>Supply Information</h3>
+          <Form.Label>General Information</Form.Label>
           <Form.Group className="container row">
             <Form.Control
               value={formName}
-              onChange={e => setFormName(e.target.value)}
+              onChange={(e) => setFormName(e.target.value)}
               type="text"
               className="col-sm-5"
-              placeholder="Item Name"
+              placeholder="Supply Name"
             />
           </Form.Group>
           <Form.Group>
@@ -136,16 +138,17 @@ const SupplyForm = ({
               <div className="row">
                 <Form.Control
                   value={formAddress}
-                  onChange={e => setFormAddress(e.target.value)}
+                  onChange={(e) => setFormAddress(e.target.value)}
                   type="text"
                   placeholder="Address"
-                  className="col-sm-7"
+                  className="col-sm-7 mr-3 mt-2"
                 />
                 <Form.Control
                   value={formRegion}
                   as="select"
-                  onChange={e => setRegion(e.target.value)}
-                  className="col-sm">
+                  onChange={(e) => setRegion(e.target.value)}
+                  className="col-sm mt-2"
+                >
                   <option>NCR</option>
                   <option>Region I</option>
                   <option>Region II</option>
@@ -164,51 +167,53 @@ const SupplyForm = ({
                   <option>Region XIII</option>
                   <option>BARMM</option>
                 </Form.Control>
-
               </div>
             </div>
 
             <Form.Text className="text-muted">
-              Where will this item be available for pickup.
+              * Where will the <b>drop-off point</b> be?
             </Form.Text>
           </Form.Group>
 
           <Form.Group>
-            <Form.Label>Amount and Price</Form.Label>
+            <Form.Label>Quantity & Price</Form.Label>
             <div className="container">
               <div className="row">
                 <div className="col-sm-6">
-                  <Form.Control
-                    value={formAmount}
-                    onChange={e => setFormAmount(e.target.value)}
-                    className="col-sm-4"
-                    type="number"
-                    placeholder="Amount"
-                  />
-                  <Form.Control
-                    className="col-sm-4"
-                    as="select"
-                    value={unit}
-                    onChange={e => setUnit(e.target.value)}
-                  >
-                    <option>g</option>
-                    <option>kg</option>
-                    <option>ml</option>
-                    <option>liter</option>
-                    <option>m</option>
-                    <option>unit</option>
-                  </Form.Control>
+                  <div class="row">
+                    <Form.Control
+                      value={formAmount}
+                      onChange={(e) => setFormAmount(e.target.value)}
+                      className="col-sm-4  mr-3 mt-2"
+                      type="number"
+                      placeholder="Amount"
+                    />
+                    <Form.Control
+                      className="col-sm-4 mt-2"
+                      as="select"
+                      value={unit}
+                      onChange={(e) => setUnit(e.target.value)}
+                    >
+                      <option>g</option>
+                      <option>kg</option>
+                      <option>ml</option>
+                      <option>liter</option>
+                      <option>m</option>
+                      <option>unit</option>
+                    </Form.Control>
+                  </div>
                 </div>
-                <div className="col-sm-6">
-                  <Form.Control 
-                  value={formPrice}
-                  onChange={e => {setFormPrice(e.target.value)}}
-                  type="number" placeholder="Price in Php" />
-                  <Form.Text
-                    
-                    className="text-muted"
-                  >
-                    Answer price per unit.
+                <div className="col-sm-6 mt-2">
+                  <Form.Control
+                    value={formPrice}
+                    onChange={(e) => {
+                      setFormPrice(e.target.value);
+                    }}
+                    type="number"
+                    placeholder="Price in PHP"
+                  />
+                  <Form.Text className="text-muted">
+                    * Answer with the <b>price per unit</b>.
                   </Form.Text>
                 </div>
               </div>
@@ -217,16 +222,16 @@ const SupplyForm = ({
           <Form.Group>
             <Form.Label>Description</Form.Label>
             <Form.Control
-              placeholder="Place your description here"
+              placeholder="Write a brief description here."
               value={formDescription}
-              onChange={e => setFormDescription(e.target.value)}
+              onChange={(e) => setFormDescription(e.target.value)}
               as="textarea"
               rows="3"
             />
           </Form.Group>
-          
+
           <Button
-            onClick={e =>
+            onClick={(e) =>
               saveSupply(
                 formName,
                 formAddress,
@@ -237,20 +242,45 @@ const SupplyForm = ({
                 formDescription
               )
             }
-            variant="primary"
+            variant="outline-secondary"
           >
             Add Item
           </Button>
-          <Button type="submit" variant="danger">
-            SUBMIT
+
+          <br></br>
+          <br></br>
+          {supplyList}
+          <br></br>
+          <Button onClick={previous} className="mr-3">
+            <svg
+              className="bi bi-arrow-left"
+              width="1em"
+              height="1em"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fillRule="evenodd"
+                d="M5.854 4.646a.5.5 0 010 .708L3.207 8l2.647 2.646a.5.5 0 01-.708.708l-3-3a.5.5 0 010-.708l3-3a.5.5 0 01.708 0z"
+                clipRule="evenodd"
+              />
+              <path
+                fillRule="evenodd"
+                d="M2.5 8a.5.5 0 01.5-.5h10.5a.5.5 0 010 1H3a.5.5 0 01-.5-.5z"
+                clipRule="evenodd"
+              />
+            </svg>
+            Previous
           </Button>
+          <Button type="submit" onClick={next}>Submit</Button>
         </Form>
 
-        {supplyList}
+        {/* {supplyList}
         <div className="container">
           <div className="row">
             <div className="col-md" style={{ textAlign: "left" }}>
-              <Button onClick={previous} variant="info">
+              <Button onClick={previous}>
                 <svg
                   className="bi bi-arrow-left"
                   width="1em"
@@ -274,7 +304,7 @@ const SupplyForm = ({
               </Button>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* <Modal show={show} onHide={handleClose}>

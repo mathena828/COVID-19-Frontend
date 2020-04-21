@@ -1,8 +1,5 @@
 /* eslint-disable no-undef */
-import filterFactory, {
-  textFilter,
-  numberFilter,
-} from "react-bootstrap-table2-filter";
+import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 import {
   Archive,
   Pencil,
@@ -12,31 +9,33 @@ import {
   CaretLeftFill,
   CaretRight,
   CaretRightFill,
-} from 'react-bootstrap-icons';
-import paginationFactory, { PaginationProvider } from "react-bootstrap-table2-paginator";
-import 'react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min.css';
+} from "react-bootstrap-icons";
+import paginationFactory, {
+  PaginationProvider,
+} from "react-bootstrap-table2-paginator";
+import "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min.css";
 import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
-import ToolkitProvider from 'react-bootstrap-table2-toolkit';
-import cellEditFactory, { Type } from 'react-bootstrap-table2-editor';
+import ToolkitProvider from "react-bootstrap-table2-toolkit";
+import cellEditFactory, { Type } from "react-bootstrap-table2-editor";
 import BootstrapTable from "react-bootstrap-table-next";
-import FormControl from 'react-bootstrap/FormControl';
-import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from "react-bootstrap/FormControl";
+import InputGroup from "react-bootstrap/InputGroup";
 import React, { useState, useEffect } from "react";
 import Constants from "../constants/SupplyList.js";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import Container from "react-bootstrap/Container";
-import Dropdown from 'react-bootstrap/Dropdown';
-import sanitizeHtml from 'sanitize-html-react';
+import Dropdown from "react-bootstrap/Dropdown";
+import sanitizeHtml from "sanitize-html-react";
 import Button from "react-bootstrap/Button";
-import Modal from 'react-bootstrap/Modal';
-import SupplyForm from "./SupplyForm.js";
+import Modal from "react-bootstrap/Modal";
+
 import Card from "react-bootstrap/Card";
-import { Link } from "react-router-dom";
-import Form from 'react-bootstrap/Form';
+
+import Form from "react-bootstrap/Form";
 import "../stylesheets/SupplyList.css";
 import { connect } from "react-redux";
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import PropTypes from "prop-types";
 import axios from "axios";
 
@@ -54,8 +53,8 @@ const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
 ));
 
 const CustomMenu = React.forwardRef(
-  ({ children, style, className, 'aria-labelledby': labeledBy }, ref) => {
-    const [value, setValue] = useState('');
+  ({ children, style, className, "aria-labelledby": labeledBy }, ref) => {
+    const [value] = useState("");
 
     return (
       <div
@@ -67,12 +66,12 @@ const CustomMenu = React.forwardRef(
         <ul className="list-unstyled">
           {React.Children.toArray(children).filter(
             (child) =>
-              !value || child.props.children.toLowerCase().startsWith(value),
+              !value || child.props.children.toLowerCase().startsWith(value)
           )}
         </ul>
       </div>
     );
-  },
+  }
 );
 
 const TableSearch = (props) => {
@@ -81,11 +80,10 @@ const TableSearch = (props) => {
   const handleClick = () => {
     if (searching) {
       props.onClear();
-      input.value = '';
-    }
-    else props.onSearch(input.value);
+      input.value = "";
+    } else props.onSearch(input.value);
     setSearching(!searching);
-  }
+  };
   return (
     <Container>
       <Row>
@@ -93,13 +91,12 @@ const TableSearch = (props) => {
         <Col sm={4}>
           <InputGroup className="mb-3">
             <FormControl
-              placeholder="Search Supply"
-              ref={ n => input = n }/>
+              placeholder="Enter Supply..."
+              ref={(n) => (input = n)}
+            />
             <InputGroup.Append>
-              <Button
-                variant="outline-secondary"
-                onClick={ handleClick }>
-                { searching? 'Clear': 'Search' }
+              <Button onClick={handleClick}>
+                {searching ? "Clear" : "Search"}
               </Button>
             </InputGroup.Append>
           </InputGroup>
@@ -109,12 +106,12 @@ const TableSearch = (props) => {
   );
 };
 
-async function fetchSupplier (id) {
+async function fetchSupplier(id) {
   try {
-    const result = await axios
-      .get(`http://localhost:8000/api/supplier/${id}`);
+    const result = await axios.get(`http://localhost:8000/api/supplier/${id}`);
     const { data, status } = result;
-    if (status < 100 || status >= 400) throw new Error("Error in fetchSupplier call.");
+    if (status < 100 || status >= 400)
+      throw new Error("Error in fetchSupplier call.");
     return data;
   } catch (e) {
     console.log(e);
@@ -126,7 +123,8 @@ async function fetchSupplies() {
   try {
     const result = await axios.get("http://localhost:8000/api/supply");
     const { data, status } = result;
-    if (status < 100 || status >= 400) throw new Error("Error in fetchSupplies call.");
+    if (status < 100 || status >= 400)
+      throw new Error("Error in fetchSupplies call.");
     return data;
   } catch (e) {
     console.log(e);
@@ -134,12 +132,15 @@ async function fetchSupplies() {
   }
 }
 
-async function updateSupply (supply) {
+async function updateSupply(supply) {
   try {
-    const result = await axios
-      .put(`http://localhost:8000/api/supply/${supply.id}/`, supply);
+    const result = await axios.put(
+      `http://localhost:8000/api/supply/${supply.id}/`,
+      supply
+    );
     const { data, status } = result;
-    if (status < 100 || status >= 400) throw new Error("Error in updateSupply call.");
+    if (status < 100 || status >= 400)
+      throw new Error("Error in updateSupply call.");
     return data;
   } catch (e) {
     console.log(e);
@@ -147,12 +148,14 @@ async function updateSupply (supply) {
   }
 }
 
-async function deleteSupply (id) {
+async function deleteSupply(id) {
   try {
-    const result = await axios
-      .delete(`http://localhost:8000/api/supply/${id}/`);
+    const result = await axios.delete(
+      `http://localhost:8000/api/supply/${id}/`
+    );
     const { data, status } = result;
-    if (status < 100 || status >= 400) throw new Error("Error in deleteSupply call.");
+    if (status < 100 || status >= 400)
+      throw new Error("Error in deleteSupply call.");
     return status;
   } catch (e) {
     console.log(e);
@@ -160,17 +163,20 @@ async function deleteSupply (id) {
   }
 }
 
-async function validateColumn (newVal, row, col, setSupplies) {
+async function validateColumn(newVal, row, col, setSupplies) {
   const { dataField } = col;
   let updatedObj = { ...row };
 
   switch (dataField) {
     case "name":
-      const sanitizedName = sanitizeHtml(newVal, Constants.SANITIZE_HTML_OPTIONS);
+      const sanitizedName = sanitizeHtml(
+        newVal,
+        Constants.SANITIZE_HTML_OPTIONS
+      );
       if (sanitizedName.length > Constants.MODEL_VALIDATION.MAX_NAME_ADDRESS) {
         return {
           valid: false,
-          message: `Name should not be more than ${Constants.MODEL_VALIDATION.MAX_NAME_ADDRESS} chars.`
+          message: `Name should not be more than ${Constants.MODEL_VALIDATION.MAX_NAME_ADDRESS} chars.`,
         };
       } else updatedObj["name"] = sanitizedName;
       break;
@@ -179,7 +185,7 @@ async function validateColumn (newVal, row, col, setSupplies) {
       if (!Number.isInteger(integerizedQuantity)) {
         return {
           valid: false,
-          message: `Quantity should be an integer.`
+          message: `Quantity should be an integer.`,
         };
       }
       updatedObj["quantity"] = integerizedQuantity;
@@ -188,7 +194,7 @@ async function validateColumn (newVal, row, col, setSupplies) {
       if (!Number.isInteger(parseInt(newVal)) || !newVal.includes(".")) {
         return {
           valid: false,
-          message: `Price should be a float.`
+          message: `Price should be a float.`,
         };
       }
       const decimalizedPrice = parseFloat(newVal).toFixed(2);
@@ -215,17 +221,31 @@ async function validateColumn (newVal, row, col, setSupplies) {
   return true;
 }
 
-async function onClickExpandEditButton ( index, supply, updatedField, fieldsEditableState, setFieldsEditableState, setSupplies ) {
+async function onClickExpandEditButton(
+  index,
+  supply,
+  updatedField,
+  fieldsEditableState,
+  setFieldsEditableState,
+  setSupplies
+) {
   if (fieldsEditableState[index]) {
     let updatedObj = { ...supply };
-    const sanitized = sanitizeHtml(updatedField, Constants.SANITIZE_HTML_OPTIONS);
+    const sanitized = sanitizeHtml(
+      updatedField,
+      Constants.SANITIZE_HTML_OPTIONS
+    );
     if (index === 0) {
       updatedObj["description"] = sanitized;
-    }
-    else {
-      if (sanitizedName.length > Constants.MODEL_VALIDATION.MAX_NAME_ADDRESS)
+    } else if (index === 1) {
+      if (sanitized.length > Constants.MODEL_VALIDATION.MAX_NAME_ADDRESS)
         console.log("Handle max address char error here!");
       else updatedObj["address"] = sanitized;
+    } else {
+      const integerizedQuantity = parseInt(sanitized);
+      if (!Number.isInteger(integerizedQuantity))
+        console.log("Handle max address char error here!");
+      else updatedObj["quantity"] = integerizedQuantity;
     }
 
     try {
@@ -245,21 +265,31 @@ async function onClickExpandEditButton ( index, supply, updatedField, fieldsEdit
       setFieldsEditableState([
         !fieldsEditableState[0],
         fieldsEditableState[1],
+        fieldsEditableState[2],
+      ]);
+      break;
+    case 1:
+      setFieldsEditableState([
+        fieldsEditableState[0],
+        !fieldsEditableState[1],
+        fieldsEditableState[2],
       ]);
       break;
     default:
       setFieldsEditableState([
         fieldsEditableState[0],
-        !fieldsEditableState[1],
+        fieldsEditableState[1],
+        !fieldsEditableState[2],
       ]);
   }
 }
 
 function SupplyList({ auth }) {
-  function onChangeExpandEditFields ( event ) {
+  function onChangeExpandEditFields(event) {
     const { name, value } = event.target;
-    if (name === 'description') setExpandDescription(value);
-    else setExpandAddress(value);
+    if (name === "description") setExpandDescription(value);
+    else if (name === "address") setExpandAddress(value);
+    else setExpandQuantity(value);
   }
   async function deleteSelected(id) {
     try {
@@ -279,10 +309,13 @@ function SupplyList({ auth }) {
 
   const [supplies, setSupplies] = useState([]);
   const [supplier, setSupplier] = useState({});
-  const [expandFieldsEditableState, setExpandFieldsEditableState] =
-    useState([false, false]);
-  const [expandDescription, setExpandDescription] = useState('');
-  const [expandAddress, setExpandAddress] = useState('');
+  const [expandFieldsEditableState, setExpandFieldsEditableState] = useState([
+    false,
+    false,
+  ]);
+  const [expandDescription, setExpandDescription] = useState("");
+  const [expandAddress, setExpandAddress] = useState("");
+  const [expandQuantity, setExpandQuantity] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [getWindowDimensions, setWindowDimensions] = useState({
     height: 0,
@@ -355,24 +388,24 @@ function SupplyList({ auth }) {
     sizePerPage: 5,
   };
 
-  const getTotalPages = (size, sizePerPage) => Math.ceil(size/sizePerPage);
+  const getTotalPages = (size, sizePerPage) => Math.ceil(size / sizePerPage);
 
   const expandRow = {
     onlyOneExpanding: true,
     animate: false,
     showExpandColumn: true,
     expandByColumnOnly: true,
-    expandColumnPosition: 'right',
+    expandColumnPosition: "right",
     onExpand: async (row, isExpand, rowIndex, e) => {
       const supplier = await fetchSupplier(row.supplier);
       setSupplier(supplier);
       setExpandDescription(row.description);
       setExpandAddress(row.address);
+      setExpandQuantity(row.quantity);
     },
-    renderer: row => (
+    renderer: (row) => (
       <Container>
-        {
-          getWindowDimensions.width >= 1200 &&
+        {getWindowDimensions.width >= 1200 && (
           <div>
             <Row>
               <Col sm={6}>
@@ -380,31 +413,35 @@ function SupplyList({ auth }) {
                   <Form.Group as={Row}>
                     <Form.Label column sm={3}>
                       Description &nbsp;
-                      {
-                        expandFieldsEditableState[0]?
-                          <Check
-                            fill="#007bff"
-                            onClick={ () =>
+                      {expandFieldsEditableState[0] ? (
+                        <Check
+                          fill="#007bff"
+                          onClick={() =>
                             onClickExpandEditButton(
                               0,
                               row,
                               expandDescription,
                               expandFieldsEditableState,
                               setExpandFieldsEditableState,
-                              setSupplies,
-                            ) }/> :
-                          <Pencil
-                            fill="#007bff"
-                            onClick={ () =>
+                              setSupplies
+                            )
+                          }
+                        />
+                      ) : (
+                        <Pencil
+                          fill="#007bff"
+                          onClick={() =>
                             onClickExpandEditButton(
                               0,
                               row,
                               expandDescription,
                               expandFieldsEditableState,
                               setExpandFieldsEditableState,
-                              setSupplies,
-                            ) }/>
-                      }
+                              setSupplies
+                            )
+                          }
+                        />
+                      )}
                     </Form.Label>
                     <Col sm={9}>
                       <Form.Control
@@ -413,37 +450,42 @@ function SupplyList({ auth }) {
                         placeholder="Supply Description"
                         defaultValue={expandDescription}
                         onChange={onChangeExpandEditFields}
-                        disabled={!expandFieldsEditableState[0]} />
+                        disabled={!expandFieldsEditableState[0]}
+                      />
                     </Col>
                   </Form.Group>
                   <Form.Group as={Row}>
                     <Form.Label column sm={3}>
                       Address &nbsp;
-                      {
-                        expandFieldsEditableState[1]?
-                          <Check
-                            fill="#007bff"
-                            onClick={ () =>
+                      {expandFieldsEditableState[1] ? (
+                        <Check
+                          fill="#007bff"
+                          onClick={() =>
                             onClickExpandEditButton(
                               1,
                               row,
                               expandAddress,
                               expandFieldsEditableState,
                               setExpandFieldsEditableState,
-                              setSupplies,
-                            ) }/> :
-                          <Pencil
-                            fill="#007bff"
-                            onClick={ () =>
+                              setSupplies
+                            )
+                          }
+                        />
+                      ) : (
+                        <Pencil
+                          fill="#007bff"
+                          onClick={() =>
                             onClickExpandEditButton(
                               1,
                               row,
                               expandAddress,
                               expandFieldsEditableState,
                               setExpandFieldsEditableState,
-                              setSupplies,
-                            ) }/>
-                      }
+                              setSupplies
+                            )
+                          }
+                        />
+                      )}
                     </Form.Label>
                     <Col sm={9}>
                       <Form.Control
@@ -451,7 +493,51 @@ function SupplyList({ auth }) {
                         name="address"
                         defaultValue={expandAddress}
                         onChange={onChangeExpandEditFields}
-                        disabled={!expandFieldsEditableState[1]} />
+                        disabled={!expandFieldsEditableState[1]}
+                      />
+                    </Col>
+                  </Form.Group>
+                  <Form.Group as={Row}>
+                    <Form.Label column sm={3}>
+                      Quantity &nbsp;
+                      {expandFieldsEditableState[2] ? (
+                        <Check
+                          fill="#007bff"
+                          onClick={() =>
+                            onClickExpandEditButton(
+                              2,
+                              row,
+                              expandQuantity,
+                              expandFieldsEditableState,
+                              setExpandFieldsEditableState,
+                              setSupplies
+                            )
+                          }
+                        />
+                      ) : (
+                        <Pencil
+                          fill="#007bff"
+                          onClick={() =>
+                            onClickExpandEditButton(
+                              2,
+                              row,
+                              expandQuantity,
+                              expandFieldsEditableState,
+                              setExpandFieldsEditableState,
+                              setSupplies
+                            )
+                          }
+                        />
+                      )}
+                    </Form.Label>
+                    <Col sm={9}>
+                      <Form.Control
+                        placeholder="Supply Quantity"
+                        name="quantity"
+                        defaultValue={expandQuantity}
+                        onChange={onChangeExpandEditFields}
+                        disabled={!expandFieldsEditableState[2]}
+                      />
                     </Col>
                   </Form.Group>
                 </Form>
@@ -459,9 +545,11 @@ function SupplyList({ auth }) {
               <Col sm={6}>
                 <Container className="row-information">
                   <Row className="form-group">
-                    <Col sm={3} className="form-label col-form-label">Supplier</Col>
+                    <Col sm={3} className="form-label col-form-label">
+                      Supplier
+                    </Col>
                     <Col sm={9} className="form-label col-form-label">
-                      {`${supplier.first_name} ${supplier.last_name}, ${supplier.organization}`}{' '}
+                      {`${supplier.first_name} ${supplier.last_name}, ${supplier.organization}`}{" "}
                     </Col>
                   </Row>
                   <Row>
@@ -478,21 +566,22 @@ function SupplyList({ auth }) {
             <Row>
               <Col sm={8}></Col>
               <Col sm={2}>
-                <InfoCircle fill="#17a2b8"/>&nbsp;{'Go to Supplier Page'}
+                {/* <InfoCircle fill="#17a2b8" />
+                &nbsp;{"Go to Supplier Page"} */}
               </Col>
               <Col sm={2}>
                 <a
                   href="javascript:;"
                   className="a-delete"
-                  onClick={ () => handleShow() }>
-                  <Archive fill="#dc3545"/> {' Delete Supply Entry '}
+                  onClick={() => handleShow()}
+                >
+                  <Archive fill="#dc3545" /> {" Delete Supply Entry "}
                 </a>
               </Col>
             </Row>
           </div>
-        }
-        {
-          (getWindowDimensions.width < 1200 && getWindowDimensions.width >= 990) &&
+        )}
+        {getWindowDimensions.width < 1200 && getWindowDimensions.width >= 990 && (
           <div>
             <Row>
               <Col sm>
@@ -500,31 +589,35 @@ function SupplyList({ auth }) {
                   <Form.Group as={Row}>
                     <Form.Label column sm={3}>
                       Description &nbsp;
-                      {
-                        expandFieldsEditableState[0]?
-                          <Check
-                            fill="#007bff"
-                            onClick={ () =>
+                      {expandFieldsEditableState[0] ? (
+                        <Check
+                          fill="#007bff"
+                          onClick={() =>
                             onClickExpandEditButton(
                               0,
                               row,
                               expandDescription,
                               expandFieldsEditableState,
                               setExpandFieldsEditableState,
-                              setSupplies,
-                            ) }/> :
-                          <Pencil
-                            fill="#007bff"
-                            onClick={ () =>
+                              setSupplies
+                            )
+                          }
+                        />
+                      ) : (
+                        <Pencil
+                          fill="#007bff"
+                          onClick={() =>
                             onClickExpandEditButton(
                               0,
                               row,
                               expandDescription,
                               expandFieldsEditableState,
                               setExpandFieldsEditableState,
-                              setSupplies,
-                            ) }/>
-                      }
+                              setSupplies
+                            )
+                          }
+                        />
+                      )}
                     </Form.Label>
                     <Col sm={9}>
                       <Form.Control
@@ -533,37 +626,42 @@ function SupplyList({ auth }) {
                         placeholder="Supply Description"
                         defaultValue={expandDescription}
                         onChange={onChangeExpandEditFields}
-                        disabled={!expandFieldsEditableState[0]} />
+                        disabled={!expandFieldsEditableState[0]}
+                      />
                     </Col>
                   </Form.Group>
                   <Form.Group as={Row}>
                     <Form.Label column sm={3}>
                       Address &nbsp;
-                      {
-                        expandFieldsEditableState[1]?
-                          <Check
-                            fill="#007bff"
-                            onClick={ () =>
+                      {expandFieldsEditableState[1] ? (
+                        <Check
+                          fill="#007bff"
+                          onClick={() =>
                             onClickExpandEditButton(
                               1,
                               row,
                               expandAddress,
                               expandFieldsEditableState,
                               setExpandFieldsEditableState,
-                              setSupplies,
-                            ) }/> :
-                          <Pencil
-                            fill="#007bff"
-                            onClick={ () =>
+                              setSupplies
+                            )
+                          }
+                        />
+                      ) : (
+                        <Pencil
+                          fill="#007bff"
+                          onClick={() =>
                             onClickExpandEditButton(
                               1,
                               row,
                               expandAddress,
                               expandFieldsEditableState,
                               setExpandFieldsEditableState,
-                              setSupplies,
-                            ) }/>
-                      }
+                              setSupplies
+                            )
+                          }
+                        />
+                      )}
                     </Form.Label>
                     <Col sm={9}>
                       <Form.Control
@@ -571,7 +669,51 @@ function SupplyList({ auth }) {
                         name="address"
                         defaultValue={expandAddress}
                         onChange={onChangeExpandEditFields}
-                        disabled={!expandFieldsEditableState[1]} />
+                        disabled={!expandFieldsEditableState[1]}
+                      />
+                    </Col>
+                  </Form.Group>
+                  <Form.Group as={Row}>
+                    <Form.Label column sm={3}>
+                      Quantity &nbsp;
+                      {expandFieldsEditableState[2] ? (
+                        <Check
+                          fill="#007bff"
+                          onClick={() =>
+                            onClickExpandEditButton(
+                              2,
+                              row,
+                              expandQuantity,
+                              expandFieldsEditableState,
+                              setExpandFieldsEditableState,
+                              setSupplies
+                            )
+                          }
+                        />
+                      ) : (
+                        <Pencil
+                          fill="#007bff"
+                          onClick={() =>
+                            onClickExpandEditButton(
+                              2,
+                              row,
+                              expandQuantity,
+                              expandFieldsEditableState,
+                              setExpandFieldsEditableState,
+                              setSupplies
+                            )
+                          }
+                        />
+                      )}
+                    </Form.Label>
+                    <Col sm={9}>
+                      <Form.Control
+                        placeholder="Supply Quantity"
+                        name="quantity"
+                        defaultValue={expandQuantity}
+                        onChange={onChangeExpandEditFields}
+                        disabled={!expandFieldsEditableState[2]}
+                      />
                     </Col>
                   </Form.Group>
                 </Form>
@@ -581,9 +723,11 @@ function SupplyList({ auth }) {
               <Col sm>
                 <Container className="row-information">
                   <Row className="form-group">
-                    <Col sm={3} className="form-label col-form-label">Supplier</Col>
+                    <Col sm={3} className="form-label col-form-label">
+                      Supplier
+                    </Col>
                     <Col sm={9} className="form-label col-form-label">
-                      {`${supplier.first_name} ${supplier.last_name}, ${supplier.organization}`}{' '}
+                      {`${supplier.first_name} ${supplier.last_name}, ${supplier.organization}`}{" "}
                     </Col>
                   </Row>
                   <Row>
@@ -599,21 +743,22 @@ function SupplyList({ auth }) {
             </Row>
             <Row>
               <Col sm={6} className="justify-content-sm-center">
-                <InfoCircle fill="#17a2b8"/>&nbsp;{'Go to Supplier Page'}
+                <InfoCircle fill="#17a2b8" />
+                &nbsp;{"Go to Supplier Page"}
               </Col>
               <Col sm={6} className="justify-content-sm-center">
                 <a
                   href="javascript:;"
                   className="a-delete"
-                  onClick={ () => handleShow() }>
-                  <Archive fill="#dc3545"/> {' Delete Supply Entry '}
+                  onClick={() => handleShow()}
+                >
+                  <Archive fill="#dc3545" /> {" Delete Supply Entry "}
                 </a>
               </Col>
             </Row>
           </div>
-        }
-        {
-          (getWindowDimensions.width < 990 && getWindowDimensions.width >= 575) &&
+        )}
+        {getWindowDimensions.width < 990 && getWindowDimensions.width >= 575 && (
           <div>
             <Row>
               <Col sm>
@@ -621,31 +766,35 @@ function SupplyList({ auth }) {
                   <Form.Group as={Row}>
                     <Form.Label column sm={3}>
                       Description &nbsp;
-                      {
-                        expandFieldsEditableState[0]?
-                          <Check
-                            fill="#007bff"
-                            onClick={ () =>
+                      {expandFieldsEditableState[0] ? (
+                        <Check
+                          fill="#007bff"
+                          onClick={() =>
                             onClickExpandEditButton(
                               0,
                               row,
                               expandDescription,
                               expandFieldsEditableState,
                               setExpandFieldsEditableState,
-                              setSupplies,
-                            ) }/> :
-                          <Pencil
-                            fill="#007bff"
-                            onClick={ () =>
+                              setSupplies
+                            )
+                          }
+                        />
+                      ) : (
+                        <Pencil
+                          fill="#007bff"
+                          onClick={() =>
                             onClickExpandEditButton(
                               0,
                               row,
                               expandDescription,
                               expandFieldsEditableState,
                               setExpandFieldsEditableState,
-                              setSupplies,
-                            ) }/>
-                      }
+                              setSupplies
+                            )
+                          }
+                        />
+                      )}
                     </Form.Label>
                     <Col sm={9}>
                       <Form.Control
@@ -654,37 +803,42 @@ function SupplyList({ auth }) {
                         placeholder="Supply Description"
                         defaultValue={expandDescription}
                         onChange={onChangeExpandEditFields}
-                        disabled={!expandFieldsEditableState[0]} />
+                        disabled={!expandFieldsEditableState[0]}
+                      />
                     </Col>
                   </Form.Group>
                   <Form.Group as={Row}>
                     <Form.Label column sm={3}>
                       Address &nbsp;
-                      {
-                        expandFieldsEditableState[1]?
-                          <Check
-                            fill="#007bff"
-                            onClick={ () =>
+                      {expandFieldsEditableState[1] ? (
+                        <Check
+                          fill="#007bff"
+                          onClick={() =>
                             onClickExpandEditButton(
                               1,
                               row,
                               expandAddress,
                               expandFieldsEditableState,
                               setExpandFieldsEditableState,
-                              setSupplies,
-                            ) }/> :
-                          <Pencil
-                            fill="#007bff"
-                            onClick={ () =>
+                              setSupplies
+                            )
+                          }
+                        />
+                      ) : (
+                        <Pencil
+                          fill="#007bff"
+                          onClick={() =>
                             onClickExpandEditButton(
                               1,
                               row,
                               expandAddress,
                               expandFieldsEditableState,
                               setExpandFieldsEditableState,
-                              setSupplies,
-                            ) }/>
-                      }
+                              setSupplies
+                            )
+                          }
+                        />
+                      )}
                     </Form.Label>
                     <Col sm={9}>
                       <Form.Control
@@ -692,7 +846,51 @@ function SupplyList({ auth }) {
                         name="address"
                         defaultValue={expandAddress}
                         onChange={onChangeExpandEditFields}
-                        disabled={!expandFieldsEditableState[1]} />
+                        disabled={!expandFieldsEditableState[1]}
+                      />
+                    </Col>
+                  </Form.Group>
+                  <Form.Group as={Row}>
+                    <Form.Label column sm={3}>
+                      Quantity &nbsp;
+                      {expandFieldsEditableState[2] ? (
+                        <Check
+                          fill="#007bff"
+                          onClick={() =>
+                            onClickExpandEditButton(
+                              2,
+                              row,
+                              expandQuantity,
+                              expandFieldsEditableState,
+                              setExpandFieldsEditableState,
+                              setSupplies
+                            )
+                          }
+                        />
+                      ) : (
+                        <Pencil
+                          fill="#007bff"
+                          onClick={() =>
+                            onClickExpandEditButton(
+                              2,
+                              row,
+                              expandQuantity,
+                              expandFieldsEditableState,
+                              setExpandFieldsEditableState,
+                              setSupplies
+                            )
+                          }
+                        />
+                      )}
+                    </Form.Label>
+                    <Col sm={9}>
+                      <Form.Control
+                        placeholder="Supply Quantity"
+                        name="quantity"
+                        defaultValue={expandQuantity}
+                        onChange={onChangeExpandEditFields}
+                        disabled={!expandFieldsEditableState[2]}
+                      />
                     </Col>
                   </Form.Group>
                 </Form>
@@ -702,9 +900,11 @@ function SupplyList({ auth }) {
               <Col sm>
                 <Container className="row-information">
                   <Row className="form-group">
-                    <Col sm={3} className="form-label col-form-label">Supplier</Col>
+                    <Col sm={3} className="form-label col-form-label">
+                      Supplier
+                    </Col>
                     <Col sm={9} className="form-label col-form-label">
-                      {`${supplier.first_name} ${supplier.last_name}, ${supplier.organization}`}{' '}
+                      {`${supplier.first_name} ${supplier.last_name}, ${supplier.organization}`}{" "}
                     </Col>
                   </Row>
                   <Row>
@@ -720,21 +920,22 @@ function SupplyList({ auth }) {
             </Row>
             <Row>
               <Col sm={6} className="text-align-right">
-                <InfoCircle fill="#17a2b8"/>&nbsp;{'Go to Supplier Page'}
+                <InfoCircle fill="#17a2b8" />
+                &nbsp;{"Go to Supplier Page"}
               </Col>
               <Col sm={6}>
                 <a
                   href="javascript:;"
                   className="a-delete"
-                  onClick={ () => handleShow() }>
-                  <Archive fill="#dc3545"/> {' Delete Supply Entry '}
+                  onClick={() => handleShow()}
+                >
+                  <Archive fill="#dc3545" /> {" Delete Supply Entry "}
                 </a>
               </Col>
             </Row>
           </div>
-        }
-        {
-          (getWindowDimensions.width < 575) &&
+        )}
+        {getWindowDimensions.width < 575 && (
           <div>
             <Row>
               <Col sm={6}>
@@ -742,31 +943,35 @@ function SupplyList({ auth }) {
                   <Form.Group as={Row}>
                     <Form.Label column sm={3}>
                       Description &nbsp;
-                      {
-                        expandFieldsEditableState[0]?
-                          <Check
-                            fill="#007bff"
-                            onClick={ () =>
+                      {expandFieldsEditableState[0] ? (
+                        <Check
+                          fill="#007bff"
+                          onClick={() =>
                             onClickExpandEditButton(
                               0,
                               row,
                               expandDescription,
                               expandFieldsEditableState,
                               setExpandFieldsEditableState,
-                              setSupplies,
-                            ) }/> :
-                          <Pencil
-                            fill="#007bff"
-                            onClick={ () =>
+                              setSupplies
+                            )
+                          }
+                        />
+                      ) : (
+                        <Pencil
+                          fill="#007bff"
+                          onClick={() =>
                             onClickExpandEditButton(
                               0,
                               row,
                               expandDescription,
                               expandFieldsEditableState,
                               setExpandFieldsEditableState,
-                              setSupplies,
-                            ) }/>
-                      }
+                              setSupplies
+                            )
+                          }
+                        />
+                      )}
                     </Form.Label>
                     <Col sm={9}>
                       <Form.Control
@@ -775,37 +980,42 @@ function SupplyList({ auth }) {
                         placeholder="Supply Description"
                         defaultValue={expandDescription}
                         onChange={onChangeExpandEditFields}
-                        disabled={!expandFieldsEditableState[0]} />
+                        disabled={!expandFieldsEditableState[0]}
+                      />
                     </Col>
                   </Form.Group>
                   <Form.Group as={Row}>
                     <Form.Label column sm={3}>
                       Address &nbsp;
-                      {
-                        expandFieldsEditableState[1]?
-                          <Check
-                            fill="#007bff"
-                            onClick={ () =>
+                      {expandFieldsEditableState[1] ? (
+                        <Check
+                          fill="#007bff"
+                          onClick={() =>
                             onClickExpandEditButton(
                               1,
                               row,
                               expandAddress,
                               expandFieldsEditableState,
                               setExpandFieldsEditableState,
-                              setSupplies,
-                            ) }/> :
-                          <Pencil
-                            fill="#007bff"
-                            onClick={ () =>
+                              setSupplies
+                            )
+                          }
+                        />
+                      ) : (
+                        <Pencil
+                          fill="#007bff"
+                          onClick={() =>
                             onClickExpandEditButton(
                               1,
                               row,
                               expandAddress,
                               expandFieldsEditableState,
                               setExpandFieldsEditableState,
-                              setSupplies,
-                            ) }/>
-                      }
+                              setSupplies
+                            )
+                          }
+                        />
+                      )}
                     </Form.Label>
                     <Col sm={9}>
                       <Form.Control
@@ -813,7 +1023,51 @@ function SupplyList({ auth }) {
                         name="address"
                         defaultValue={expandAddress}
                         onChange={onChangeExpandEditFields}
-                        disabled={!expandFieldsEditableState[1]} />
+                        disabled={!expandFieldsEditableState[1]}
+                      />
+                    </Col>
+                  </Form.Group>
+                  <Form.Group as={Row}>
+                    <Form.Label column sm={3}>
+                      Quantity &nbsp;
+                      {expandFieldsEditableState[2] ? (
+                        <Check
+                          fill="#007bff"
+                          onClick={() =>
+                            onClickExpandEditButton(
+                              2,
+                              row,
+                              expandQuantity,
+                              expandFieldsEditableState,
+                              setExpandFieldsEditableState,
+                              setSupplies
+                            )
+                          }
+                        />
+                      ) : (
+                        <Pencil
+                          fill="#007bff"
+                          onClick={() =>
+                            onClickExpandEditButton(
+                              2,
+                              row,
+                              expandQuantity,
+                              expandFieldsEditableState,
+                              setExpandFieldsEditableState,
+                              setSupplies
+                            )
+                          }
+                        />
+                      )}
+                    </Form.Label>
+                    <Col sm={9}>
+                      <Form.Control
+                        placeholder="Supply Quantity"
+                        name="quantity"
+                        defaultValue={expandQuantity}
+                        onChange={onChangeExpandEditFields}
+                        disabled={!expandFieldsEditableState[2]}
+                      />
                     </Col>
                   </Form.Group>
                 </Form>
@@ -821,9 +1075,11 @@ function SupplyList({ auth }) {
               <Col sm={6}>
                 <Container className="row-information">
                   <Row className="form-group">
-                    <Col sm={3} className="form-label col-form-label">Supplier</Col>
+                    <Col sm={3} className="form-label col-form-label">
+                      Supplier
+                    </Col>
                     <Col sm={9} className="form-label col-form-label">
-                      {`${supplier.first_name} ${supplier.last_name}, ${supplier.organization}`}{' '}
+                      {`${supplier.first_name} ${supplier.last_name}, ${supplier.organization}`}{" "}
                     </Col>
                   </Row>
                   <Row>
@@ -839,43 +1095,42 @@ function SupplyList({ auth }) {
             </Row>
             <Row>
               <Col className="text-align-center" sm>
-                <InfoCircle fill="#17a2b8"/>&nbsp;{'Go to Supplier Page'}
-                  &nbsp;
+                <InfoCircle fill="#17a2b8" />
+                &nbsp;{"Go to Supplier Page"}
+                &nbsp;
                 <a
                   href="javascript:;"
                   className="a-delete"
-                  onClick={ () => handleShow() }>
-                  <Archive fill="#dc3545"/> {' Delete Supply Entry '}
+                  onClick={() => handleShow()}
+                >
+                  <Archive fill="#dc3545" /> {" Delete Supply Entry "}
                 </a>
               </Col>
             </Row>
           </div>
-        }
+        )}
 
         <Modal
           size="lg"
           dialogClassName="modal-delete"
           show={showDeleteModal}
-          onHide={ handleClose }
+          onHide={handleClose}
           animation={false}
           centered
-          >
-
+        >
           <Modal.Header closeButton>
-            <Modal.Title>
-              {`Deleting entry: ${row.name}`}
-            </Modal.Title>
+            <Modal.Title>{`Deleting entry: ${row.name}`}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            {'Are you sure you want to delete '}
+            {"Are you sure you want to delete "}
             <i>{row.name}&nbsp;</i>
-            {' from the supply list?'}
+            {" from the supply list?"}
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
               Cancel
             </Button>
-            <Button variant="danger" onClick={ () => deleteSelected(row.id) }>
+            <Button variant="danger" onClick={() => deleteSelected(row.id)}>
               Delete
             </Button>
           </Modal.Footer>
@@ -886,12 +1141,13 @@ function SupplyList({ auth }) {
 
   const handleNextPage = ({ page, onPageChange }) => () => {
     const resultingPage = page + 1;
-    if (resultingPage <= getTotalPages(supplies.length, 5)) onPageChange(resultingPage);
+    if (resultingPage <= getTotalPages(supplies.length, 5))
+      onPageChange(resultingPage);
   };
 
   const handlePrevPage = ({ page, onPageChange }) => () => {
     const resultingPage = page - 1;
-    if (resultingPage > 0 ) onPageChange(resultingPage);
+    if (resultingPage > 0) onPageChange(resultingPage);
   };
 
   const handleSizePerPage = ({ page, onSizePerPageChange }, newSizePerPage) => {
@@ -930,124 +1186,137 @@ function SupplyList({ auth }) {
   return (
     <div className="SupplyList">
       <div>
-        <Jumbotron className="text-center">
-          <h1>Supply List</h1>
+        <Jumbotron className="jumbo-header">
+          <div class="container jumbo-description">
+            <p className="jumbo-title">SUPPLY LIST</p>
+            <p className="jumbo-instructions">
+              Filter supplies based on region, quantity, and price.
+            </p>
+          </div>
         </Jumbotron>
       </div>
 
-      <Container
-        className="main-card-container"
-        fluid="lg">
+      <Container className="main-card-container" fluid="lg">
         <Card className="main-card">
           <Card.Body>
             <ToolkitProvider
               keyField="id"
-              data={ supplies }
-              columns={ columns }
+              data={supplies}
+              columns={columns}
               search
             >
-              {
-                props => (
-                    <div>
-                        <TableSearch { ...props.searchProps } />
-                        <PaginationProvider
-                          pagination={ paginationFactory(options) }>
-                          {
-                            ({
-                              paginationProps,
-                              paginationTableProps
-                            }) => (
-                              <Container>
-                                <Row>
-                                  <Col sm={12}>
-                                    <BootstrapTable
-                                      { ...props.baseProps }
-                                      bordered={ false }
-                                      filter={ filterFactory() }
-                                      expandRow={ expandRow }
-                                      bootstrap4
-                                      filterPosition="bottom"
-                                      cellEdit={
-                                        cellEditFactory({
-                                          mode: 'click',
-                                          blurToSave: true,
-                                          autoSelectText: true,
-                                        })
-                                      }
-                                      { ...paginationTableProps }
-                                    />
-                                  </Col>
-                                  <Col sm={11}></Col>
-                                  <Col sm={1}>
-                                    <Dropdown>
-                                      {
-                                        paginationProps.page !== 1?
-                                          <CaretLeftFill onClick={ handlePrevPage(paginationProps) }/> :
-                                          <CaretLeft/>
-                                      }
-                                      <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
-                                        { `${paginationProps.page} of ${getTotalPages(supplies.length, 5)}` }
-                                      </Dropdown.Toggle>
-                                      {
-                                        paginationProps.page !== getTotalPages(supplies.length, 5)?
-                                          <CaretRightFill onClick={ handleNextPage(paginationProps) }/> :
-                                          <CaretRight/>
-                                      }
+              {(props) => (
+                <div>
+                  <TableSearch {...props.searchProps} />
+                  <PaginationProvider pagination={paginationFactory(options)}>
+                    {({ paginationProps, paginationTableProps }) => (
+                      <Container>
+                        <Row>
+                          <Col sm={12}>
+                            <BootstrapTable
+                              {...props.baseProps}
+                              bordered={false}
+                              filter={filterFactory()}
+                              expandRow={expandRow}
+                              bootstrap4
+                              filterPosition="bottom"
+                              cellEdit={cellEditFactory({
+                                mode: "click",
+                                blurToSave: true,
+                                autoSelectText: true,
+                              })}
+                              {...paginationTableProps}
+                            />
+                          </Col>
+                          <Col sm={11}></Col>
+                          <Col sm={1}>
+                            <Dropdown>
+                              {paginationProps.page !== 1 ? (
+                                <CaretLeftFill
+                                  onClick={handlePrevPage(paginationProps)}
+                                />
+                              ) : (
+                                <CaretLeft />
+                              )}
+                              <Dropdown.Toggle
+                                as={CustomToggle}
+                                id="dropdown-custom-components"
+                              >
+                                {`${paginationProps.page} of ${getTotalPages(
+                                  supplies.length,
+                                  5
+                                )}`}
+                              </Dropdown.Toggle>
+                              {paginationProps.page !==
+                              getTotalPages(supplies.length, 5) ? (
+                                <CaretRightFill
+                                  onClick={handleNextPage(paginationProps)}
+                                />
+                              ) : (
+                                <CaretRight />
+                              )}
 
-                                      <Dropdown.Menu as={CustomMenu}>
-                                        <Dropdown.Item
-                                          eventKey="0"
-                                          onClick={ () => handleSizePerPage(
-                                            paginationProps,
-                                            5,
-                                          ) }
-                                          >5</Dropdown.Item>
-                                        <Dropdown.Item
-                                          eventKey="1"
-                                          onClick={ () => handleSizePerPage(
-                                            paginationProps,
-                                            10,
-                                          ) }
-                                          >10</Dropdown.Item>
-                                        <Dropdown.Item
-                                          eventKey="2"
-                                          onClick={ () => handleSizePerPage(
-                                            paginationProps,
-                                            25,
-                                          ) }
-                                          >25</Dropdown.Item>
-                                        <Dropdown.Item
-                                          eventKey="3"
-                                          onClick={ () => handleSizePerPage(
-                                            paginationProps,
-                                            50,
-                                          ) }
-                                          >50</Dropdown.Item>
-                                        <Dropdown.Item
-                                          eventKey="4"
-                                          onClick={ () => handleSizePerPage(
-                                            paginationProps,
-                                            100,
-                                          ) }
-                                          >100</Dropdown.Item>
-                                        <Dropdown.Item
-                                          eventKey="5"
-                                          onClick={ () => handleSizePerPage(
-                                            paginationProps,
-                                            supplies.length,
-                                          ) }
-                                          >All</Dropdown.Item>
-                                      </Dropdown.Menu>
-                                    </Dropdown>
-                                  </Col>
-                                </Row>
-                              </Container>
-                            )
-                          }
-                        </PaginationProvider>
-                    </div>
-                )
-              }
+                              <Dropdown.Menu as={CustomMenu}>
+                                <Dropdown.Item
+                                  eventKey="0"
+                                  onClick={() =>
+                                    handleSizePerPage(paginationProps, 5)
+                                  }
+                                >
+                                  5
+                                </Dropdown.Item>
+                                <Dropdown.Item
+                                  eventKey="1"
+                                  onClick={() =>
+                                    handleSizePerPage(paginationProps, 10)
+                                  }
+                                >
+                                  10
+                                </Dropdown.Item>
+                                <Dropdown.Item
+                                  eventKey="2"
+                                  onClick={() =>
+                                    handleSizePerPage(paginationProps, 25)
+                                  }
+                                >
+                                  25
+                                </Dropdown.Item>
+                                <Dropdown.Item
+                                  eventKey="3"
+                                  onClick={() =>
+                                    handleSizePerPage(paginationProps, 50)
+                                  }
+                                >
+                                  50
+                                </Dropdown.Item>
+                                <Dropdown.Item
+                                  eventKey="4"
+                                  onClick={() =>
+                                    handleSizePerPage(paginationProps, 100)
+                                  }
+                                >
+                                  100
+                                </Dropdown.Item>
+                                <Dropdown.Item
+                                  eventKey="5"
+                                  onClick={() =>
+                                    handleSizePerPage(
+                                      paginationProps,
+                                      supplies.length
+                                    )
+                                  }
+                                >
+                                  All
+                                </Dropdown.Item>
+                              </Dropdown.Menu>
+                            </Dropdown>
+                          </Col>
+                        </Row>
+                      </Container>
+                    )}
+                  </PaginationProvider>
+                </div>
+              )}
             </ToolkitProvider>
           </Card.Body>
         </Card>

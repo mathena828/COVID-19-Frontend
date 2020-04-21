@@ -4,13 +4,20 @@ import Button from "react-bootstrap/Button";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { logout } from "../../actions/auth";
+import "../../stylesheets/Navigation.css";
+import Navbar from "react-bootstrap/Navbar";
+
 function Navigation({ auth, logout }) {
-  const { isAuthenticated, user } = auth;
+  const { isAuthenticated } = auth;
   const authLinks = (
     <ul className="navbar-nav ml-auto mt-2 mt-lg-0">
       <li className="nav-item">
+        <Link to="/supply-list" className="nav-link">
+          Supplies
+        </Link>
+      </li>
+      <li className="nav-item">
         <Button
-          variant="outline-info"
           className="nav-link text-light"
           onClick={(e) => {
             e.preventDefault();
@@ -24,11 +31,11 @@ function Navigation({ auth, logout }) {
   );
   const guestLinks = (
     <ul className="navbar-nav ml-auto mt-2 mt-lg-0">
-      <li className="nav-item">
+      {/* <li className="nav-item">
         <Link to="/register" className="nav-link">
           Register
         </Link>
-      </li>
+      </li> */}
       <li className="nav-item">
         <Link to="/login" className="nav-link">
           Login
@@ -38,29 +45,20 @@ function Navigation({ auth, logout }) {
   );
 
   return (
-    <nav className="navbar navbar-expand-sm navbar-dark bg-primary">
-      <div className="container">
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarTogglerDemo01"
-          aria-controls="navbarTogglerDemo01"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon" />
-        </button>
-        <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
-          <a className="navbar-brand" href="#">
-            AgriLink
-          </a>
-        </div>
+    <Navbar className="navbar navbar-expand-sm navbar-dark bg-primary">
+      <Navbar.Brand>
+        <Link to="/" className="navbar-brand">
+          AgriLink
+        </Link>
+      </Navbar.Brand>
+      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+      <Navbar.Collapse id="basic-navbar-nav">
         {isAuthenticated ? authLinks : guestLinks}
-      </div>
-    </nav>
+      </Navbar.Collapse>
+    </Navbar>
   );
 }
+
 Navigation.propTypes = {
   auth: PropTypes.object.isRequired,
   logout: PropTypes.func.isRequired,
